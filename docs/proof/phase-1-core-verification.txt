@@ -1,0 +1,25 @@
+Phase 1 core verification
+========================
+
+Environment: Windows 11, Python 3.11.9
+Commands:
+  python -m py_compile game.py tools/verify_phase1.py
+  python tools/verify_phase1.py
+  python -c "import json; d=json.load(open('game.contract.json',encoding='utf-8')); print('contract',d['contract_version'],'fields',len(d['tuning']),'lanterns',d['tuning']['lantern_count_night1'])"
+
+Observed output:
+  Phase 1 core checks passed:
+  - headless simulation does not import Tkinter
+  - contract tuning matches simulation constants
+  - pickup, deposit and lantern lighting
+  - pulse cost, stun and score
+  - shade collision, health and dropped motes
+  - island edge fall damage
+  - loss at zero flames
+  - dawn timeout
+  - win and end bonus
+  - same-seed deterministic JSONL output
+  - invalid input and scenario exit with code 2
+  contract 1.0 fields 20 lanterns 5
+
+The verifier launches the real headless executable for each scenario and asserts on its JSONL output. The decorative lit-lantern fireflies were added after this core suite first passed; the full suite was rerun afterward and passed again.

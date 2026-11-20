@@ -1,5 +1,28 @@
 # Day 12 — AI SDLC: Đảo Đèn Lồng
 
+## Bản game Phase 1
+
+Game hiện tại dùng Python 3.10+ và thư viện chuẩn. Trên Windows chạy bằng `python`; trên Linux/macOS dùng `python3`. Cần Tkinter để mở giao diện (trên một số Linux cần cài gói hệ điều hành `python3-tk`).
+
+```bash
+python3 -m py_compile game.py
+python3 game.py
+```
+
+Trên Windows thay `python3` bằng `python`. Điều khiển: WASD di chuyển, Space nhảy, E nhặt đom đóm hoặc nạp đèn, Q phát xung (tiêu 1 đom đóm đang mang), phím mũi tên trái/phải xoay camera, R chơi lại sau khi kết thúc, Esc thoát. Thắp cả 5 đèn để thắng; hết 3 lửa hoặc hết 300 giây thì thua.
+
+Chạy contract headless (không cần Tkinter, cửa sổ hay GPU):
+
+```bash
+python3 game.py --headless --seed 7 --night 1 --ticks 600 --out out.jsonl
+```
+
+`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` để tái lập các scenario kiểm tra; bằng chứng ghi tại `docs/proof/phase-1-core-verification.txt`. Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md).
+
+### Sáng tạo của tôi
+
+Đèn đã thắp có ba đom đóm trang trí bay vòng quanh. Đây chỉ là hiệu ứng vẽ, không thêm thực thể gameplay và không đổi contract output; bộ scenario headless vẫn đạt sau khi thêm hiệu ứng.
+
 > **Cá nhân** (1 người / 1 MSSV) · Áp dụng SDLC cùng AI để xây một **game 3D** qua **4 phase**, từ yêu cầu ban đầu tới bản phát hành.
 > **Lab board + trợ giảng:** **[Đảo Đèn Lồng Lab](https://claude.ai/artifact/Q1RYyv1dxjUczzCbd2ZnoW)**
 
