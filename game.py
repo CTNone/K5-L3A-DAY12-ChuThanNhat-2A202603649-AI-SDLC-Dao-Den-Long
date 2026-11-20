@@ -9,16 +9,26 @@ from pathlib import Path
 
 HZ = 60
 T = {
-    "player_speed": 5.0, "carry_capacity": 5, "lantern_cost": 5, "lantern_count_night1": 5,
+    "player_speed": 5.0, "carry_capacity": 10, "lantern_cost": 5,
+    "lantern_count_night1": 5, "lantern_count_night2": 6, "lantern_count_night3": 7,
     "pickup_radius": 1.2, "interact_radius": 2.0, "pulse_cost": 1, "pulse_radius": 7.0,
-    "night1_duration_s": 300, "flames": 3, "invuln_s": 2.0, "hit_drop_ratio": 0.5,
+    "night1_duration_s": 300, "night2_duration_s": 360, "night3_duration_s": 420,
+    "flames": 3, "invuln_s": 2.0, "hit_drop_ratio": 0.5,
     "pulse_stun_s": 2.0, "pulse_push_m": 2.0, "pulse_cooldown_s": 3.0,
     "safe_radius": 3.0, "shade_speed": 2.5, "shade_hit_radius": 1.0,
     "fall_enabled": True,
-    "island_radius_m": 35.0, "jump_velocity_m_s": 7.0, "gravity_m_s2": 18.0,
-    "lantern_ring_radius_m": 20.0, "initial_mote_count": 30,
-    "initial_mote_spawn_radius_m": 28.0, "initial_shade_count": 3,
-    "initial_shade_spawn_radius_m": 27.0,
+    "island_radius_m": 40.0, "jump_velocity_m_s": 7.0, "gravity_m_s2": 18.0,
+    "lantern_ring_radius_m": 25.0, "initial_mote_count": 40,
+    "initial_mote_spawn_radius_m": 36.0, "initial_shade_count": 3,
+    "initial_shade_spawn_radius_m": 32.0,
+    "dash_speed_m_s": 12.0, "dash_duration_s": 0.2, "dash_cooldown_s": 1.5,
+    "glide_fall_speed_m_s": 2.0,
+    "lost_wisp_speed_m_s": 2.0, "lost_wisp_radius_m": 2.0, "lost_wisp_push_m_s": 3.0,
+    "wind_charm_radius_m": 1.2, "wind_charm_duration_s": 8.0,
+    "strong_wind_speed_m_s": 2.5, "bell_tower_radius_m": 3.0,
+    "step_height_m": 0.8, "fall_y_m": -8.0,
+    "night2_shade_speed": 2.8, "night3_shade_speed": 3.1,
+    "night2_lost_wisp_speed_m_s": 2.0, "night3_lost_wisp_speed_m_s": 2.6,
     "score": {"per_mote": 10, "per_lantern": 100, "per_stun": 25, "per_second_left": 1, "per_flame_left": 50},
 }
 ISLAND_R = T["island_radius_m"]

@@ -29,7 +29,7 @@ def main():
     assert "tkinter" not in sys.modules
     passed.append("headless simulation does not import Tkinter")
     contract=json.loads((ROOT/"game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"]=="1.0" and contract["tuning"]==T
+    assert contract["contract_version"]=="1.1" and contract["tuning"]==T
     passed.append("contract tuning matches simulation constants")
     with tempfile.TemporaryDirectory() as tmp:
         empty = {"random_motes": False, "random_shades": False, "motes": [[0,0,0] for _ in range(5)], "shades": [],
@@ -56,7 +56,7 @@ def main():
         assert p.returncode==0 and hit["data"]=={"by":"shade","flames":2,"dropped":2}
         passed.append("shade collision, health and dropped motes")
 
-        sc={"player":{"pos":[34,0,0]},"random_motes":False,"random_shades":False,"motes":[],"shades":[]}
+        sc={"player":{"pos":[T["island_radius_m"]+1,0,0]},"random_motes":False,"random_shades":False,"motes":[],"shades":[]}
         p,rows=run(tmp,"fall",sc,{"frames":[{"tick":0,"move":[1,0]}]},20)
         assert p.returncode==0 and any(r.get("name")=="player_hit" and r["data"]["by"]=="fall" for r in rows)
         passed.append("island edge fall damage")
