@@ -1,0 +1,36 @@
+{
+  "night": 2,
+  "name": "Hai Đảo",
+  "duration_s": 360,
+  "player_spawn": [0, 0, 0],
+  "platforms": [
+    { "type": "circle", "center": [-20.0, 0.0], "radius_m": 18.0, "height_m": 0.0 },
+    { "type": "circle", "center": [20.0, 0.0], "radius_m": 16.0, "height_m": 0.0 },
+    { "type": "rect", "min": [-2.0, -3.0], "max": [4.0, 3.0], "height_m": 0.0 }
+  ],
+  "lanterns": [
+    { "id": "L1", "pos": [-30.0, 0.0, -8.0] },
+    { "id": "L2", "pos": [-30.0, 0.0, 8.0] },
+    { "id": "L3", "pos": [-12.0, 0.0, 0.0] },
+    { "id": "L4", "pos": [12.0, 0.0, 0.0] },
+    { "id": "L5", "pos": [30.0, 0.0, -8.0] },
+    { "id": "L6", "pos": [30.0, 0.0, 8.0] }
+  ],
+  "mote_spawn": { "count": 45, "center": [0, 0], "radius_m": 38.0 },
+  "shade_spawn": [
+    { "id": "S1", "pos": [-26.0, 0.0, 0.0] },
+    { "id": "S2", "pos": [-10.0, 0.0, 10.0] },
+    { "id": "S3", "pos": [14.0, 0.0, 0.0] },
+    { "id": "S4", "pos": [28.0, 0.0, 10.0] }
+  ],
+  "wisp_spawn": [
+    { "id": "W1", "pos": [-10.0, 0.0, 0.0] },
+    { "id": "W2", "pos": [10.0, 0.0, 0.0] }
+  ],
+  "charm_spawn": [
+    { "id": "C1", "pos": [-20.0, 0.0, 0.0] },
+    { "id": "C2", "pos": [20.0, 0.0, 0.0] }
+  ],
+  "bell_tower": null,
+  "wind_zones": []
+}

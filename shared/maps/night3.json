@@ -1,0 +1,47 @@
+{
+  "night": 3,
+  "name": "Tháp Chuông",
+  "duration_s": 420,
+  "player_spawn": [0, 0, 28],
+  "platforms": [
+    { "type": "circle", "center": [0, 0], "radius_m": 30.0, "height_m": 0.0 },
+    { "type": "circle", "center": [0, 0], "radius_m": 20.0, "height_m": 4.0 },
+    { "type": "circle", "center": [0, 0], "radius_m": 10.0, "height_m": 8.0 },
+    { "type": "ramp", "min": [-3.0, 20.0], "max": [3.0, 26.0], "axis": "z", "height_min_m": 4.0, "height_max_m": 0.0 },
+    { "type": "ramp", "min": [-3.0, 10.0], "max": [3.0, 14.0], "axis": "z", "height_min_m": 8.0, "height_max_m": 4.0 },
+    { "type": "jump_pad", "center": [15.0, 0.0], "radius_m": 2.0, "height_m": 0.0, "launch_velocity_m_s": 14.0 },
+    { "type": "jump_pad", "center": [-15.0, 0.0], "radius_m": 2.0, "height_m": 0.0, "launch_velocity_m_s": 14.0 }
+  ],
+  "lanterns": [
+    { "id": "L1", "pos": [28.0, 0.0, 0.0] },
+    { "id": "L2", "pos": [-14.0, 0.0, 24.249] },
+    { "id": "L3", "pos": [-14.0, 0.0, -24.249] },
+    { "id": "L4", "pos": [0.0, 0.0, -28.0] },
+    { "id": "L5", "pos": [16.0, 0.0, 0.0] },
+    { "id": "L6", "pos": [-8.0, 0.0, 13.856] },
+    { "id": "L7", "pos": [0.0, 0.0, 6.0] }
+  ],
+  "mote_spawn": { "count": 60, "center": [0, 0], "radius_m": 29.0 },
+  "shade_spawn": [
+    { "id": "S1", "pos": [25.0, 0.0, 0.0] },
+    { "id": "S2", "pos": [-25.0, 0.0, 0.0] },
+    { "id": "S3", "pos": [0.0, 0.0, 25.0] },
+    { "id": "S4", "pos": [15.0, 0.0, 0.0] },
+    { "id": "S5", "pos": [-15.0, 0.0, 0.0] }
+  ],
+  "wisp_spawn": [
+    { "id": "W1", "pos": [0.0, 0.0, 18.0] },
+    { "id": "W2", "pos": [20.0, 0.0, 0.0] },
+    { "id": "W3", "pos": [-20.0, 0.0, 0.0] }
+  ],
+  "charm_spawn": [
+    { "id": "C1", "pos": [15.0, 0.0, 0.0] },
+    { "id": "C2", "pos": [-15.0, 0.0, 0.0] },
+    { "id": "C3", "pos": [0.0, 0.0, 12.0] }
+  ],
+  "bell_tower": { "id": "bell", "pos": [0.0, 0.0, 0.0], "base_height_m": 8.0, "radius_m": 3.0, "height_m": 12.0 },
+  "wind_zones": [
+    { "id": "wind1", "type": "rect", "min": [-4.0, 20.0], "max": [4.0, 26.0], "push": [0.0, 0.0, 1.0] },
+    { "id": "wind2", "type": "rect", "min": [-4.0, 10.0], "max": [4.0, 14.0], "push": [0.0, 0.0, 1.0] }
+  ]
+}

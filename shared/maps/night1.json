@@ -1,0 +1,26 @@
+{
+  "night": 1,
+  "name": "Đảo Bến",
+  "duration_s": 300,
+  "player_spawn": [0, 0, 0],
+  "platforms": [
+    { "type": "circle", "center": [0, 0], "radius_m": 35.0, "height_m": 0.0 }
+  ],
+  "lanterns": [
+    { "id": "L1", "pos": [20.0, 0.0, 0.0] },
+    { "id": "L2", "pos": [6.18, 0.0, 19.021] },
+    { "id": "L3", "pos": [-16.18, 0.0, 11.756] },
+    { "id": "L4", "pos": [-16.18, 0.0, -11.756] },
+    { "id": "L5", "pos": [6.18, 0.0, -19.021] }
+  ],
+  "mote_spawn": { "count": 30, "center": [0, 0], "radius_m": 28.0 },
+  "shade_spawn": [
+    { "id": "S1", "pos": [27.0, 0.0, 0.0] },
+    { "id": "S2", "pos": [-13.5, 0.0, 23.383] },
+    { "id": "S3", "pos": [-13.5, 0.0, -23.383] }
+  ],
+  "wisp_spawn": [],
+  "charm_spawn": [],
+  "bell_tower": null,
+  "wind_zones": []
+}
