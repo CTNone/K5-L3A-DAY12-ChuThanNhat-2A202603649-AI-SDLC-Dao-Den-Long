@@ -17,4 +17,4 @@
 
 - `game.contract.json` là nguồn thông số công khai cho test harness; các giá trị trên phải khớp logic thực tế.
 - Kiểm tra headless nên bao gồm nhặt, nạp đèn, pulse, va chạm, kết thúc thắng/thua, scenario và tính tất định; mọi tọa độ snapshot làm tròn 3 chữ số.
-- Chưa thêm ý sáng tạo: chỉ xem xét sau khi hoàn tất và kiểm chứng lõi theo PRD-0.
+- Ý sáng tạo nhỏ: ba đom đóm trang trí bay quanh mỗi đèn đã thắp. Đây chỉ là hiệu ứng vẽ, không thêm thực thể gameplay và không đổi headless output; bộ kiểm chứng lõi được chạy lại sau khi thêm.
