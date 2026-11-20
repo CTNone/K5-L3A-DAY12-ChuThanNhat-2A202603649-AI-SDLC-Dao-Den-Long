@@ -33,14 +33,13 @@ coi là số liệu cuối.
 - `godot/shared/` là bản sao được sinh bởi `tools/sync_shared.py`; có kiểm tra
   đồng bộ, không sửa tay bản sao.
 - Các giá trị mới: dash, glide, Gió Lạc, bùa gió, gió mạnh, tháp chuông, thời
-  lượng từng đêm. Night 1 giữ nguyên tuning v1.0; Night 2/3 dùng override
-  `carry_capacity` 8/10, `shade_speed` 2.8/3.1, `lost_wisp_speed_m_s` 2.0/2.6.
-  Giá trị cụ thể nằm trong assumptions.
+  lượng từng đêm. Night 2/3 dùng override `shade_speed` 2.8/3.1 và
+  `lost_wisp_speed_m_s` 2.0/2.6. Giá trị cụ thể nằm trong assumptions.
 
 ### AC-2.3 Ba bản đồ
 
-- Night 1: đảo tròn bán kính 35 m, 5 đèn vành 20 m, spawn người chơi tại
-  `(0,0,0)`; giữ nguyên tuning Phase 1.
+- Night 1: đảo tròn bán kính 40 m, 5 đèn vành 25 m, spawn người chơi tại
+  `(0,0,0)`; 40 đom đóm, 3 Bóng Mực vành 32 m.
 - Night 2: hai đảo tròn nối bằng cầu, 6 đèn, có Gió Lạc và bùa gió.
 - Night 3: ba tầng (0 m/4 m/8 m), dốc, bục nhảy, tháp chuông, 7 đèn, gió mạnh,
   Gió Lạc và bùa gió.
@@ -78,8 +77,7 @@ coi là số liệu cuối.
 - Chuỗi màn: menu → giới thiệu đêm → chơi → kết quả → đêm kế; thắng Night 3
   có màn Bình Minh; thua cho chơi lại đúng đêm.
 - Pause/resume/retry/settings; lưu âm lượng và độ nhạy chuột.
-- HUD: lửa, đồng hồ, đèn/điểm, ô đom đóm theo sức chứa từng đêm (5/8/10),
-  cooldown pulse, nhắc tương tác,
+- HUD: lửa, đồng hồ, đèn/điểm, 10 ô đom đóm, cooldown pulse, nhắc tương tác,
   chỉ hướng đèn chưa sáng, cảnh báo.
 - Âm nhạc + SFX; điều khiển âm lượng.
 - Trung bình ≥30 FPS ở 1280×720 trên máy đo phù hợp; ghi cấu hình đo.

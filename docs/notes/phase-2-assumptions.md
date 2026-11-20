@@ -21,14 +21,14 @@ Giữ các giá trị Phase 1 trừ các mục dưới đây:
 
 | Khóa | Giá trị | Ghi chú |
 |---|---:|---|
-| `carry_capacity` | 5 | Giữ Phase 1; Night 2/3 override 8/10 |
+| `carry_capacity` | 10 | HUD 10 ô đom đóm theo checklist Phase 2 |
 | `lantern_cost` | 5 | Giữ Phase 1 để regression nhặt/nạp vẫn hợp lệ |
-| `island_radius_m` | 35.0 | Giữ Phase 1; Night 1 là đảo tròn R=35 |
-| `lantern_ring_radius_m` | 20.0 | Giữ Phase 1; vành đèn Night 1 |
-| `initial_mote_count` | 30 | Giữ Phase 1; Night 1 |
-| `initial_mote_spawn_radius_m` | 28.0 | Giữ Phase 1; Night 1 |
-| `initial_shade_count` | 3 | Giữ Phase 1; Night 1 |
-| `initial_shade_spawn_radius_m` | 27.0 | Giữ Phase 1; Night 1 |
+| `island_radius_m` | 40.0 | Night 1 theo checklist Phase 2 |
+| `lantern_ring_radius_m` | 25.0 | Vành đèn Night 1 |
+| `initial_mote_count` | 40 | Night 1 |
+| `initial_mote_spawn_radius_m` | 36.0 | Night 1 |
+| `initial_shade_count` | 3 | Night 1 |
+| `initial_shade_spawn_radius_m` | 32.0 | Night 1 |
 | `dash_speed_m_s` | 12.0 | Dash |
 | `dash_duration_s` | 0.2 | Dash |
 | `dash_cooldown_s` | 1.5 | Dash |
@@ -44,8 +44,6 @@ Giữ các giá trị Phase 1 trừ các mục dưới đây:
 | `fall_y_m` | -8.0 | Ngưỡng rơi |
 | `night2_duration_s` | 360 | Night 2 |
 | `night3_duration_s` | 420 | Night 3 |
-| `night2_carry_capacity` | 8 | Override Night 2 |
-| `night3_carry_capacity` | 10 | Override Night 3 |
 | `night2_shade_speed` | 2.8 | Override Night 2 |
 | `night3_shade_speed` | 3.1 | Override Night 3 |
 | `night2_lost_wisp_speed_m_s` | 2.0 | Override Night 2 |
@@ -58,12 +56,12 @@ không thêm điểm cho charm/wisp.
 
 ### Night 1 — Đảo Bến
 
-- Một đảo tròn tâm `(0,0)`, bán kính 35 m, cao 0.
-- 5 đèn vành bán kính 20 m: `L1..L5`.
+- Một đảo tròn tâm `(0,0)`, bán kính 40 m, cao 0.
+- 5 đèn vành bán kính 25 m: `L1..L5`.
 - Player spawn `(0,0,0)`.
-- 30 đom đóm ngẫu nhiên trong bán kính 28 m, chỉ trên bề mặt.
-- 3 Bóng Mực vành bán kính 27 m, tốc độ 2,5 m/s.
-- Mang tối đa 5 đom đóm; giữ nguyên toàn bộ tuning Phase 1.
+- 40 đom đóm ngẫu nhiên trong bán kính 36 m, chỉ trên bề mặt.
+- 3 Bóng Mực vành bán kính 32 m, tốc độ 2,5 m/s.
+- Mang tối đa 10 đom đóm.
 - Không Gió Lạc, không bùa, không gió mạnh, không tháp chuông.
 
 ### Night 2 — Hai đảo và cầu
@@ -74,7 +72,7 @@ không thêm điểm cho charm/wisp.
 - 6 đèn: 3 trên A, 3 trên B.
 - Player spawn `(0,0,0)` trên cầu.
 - 45 đom đóm ngẫu nhiên trên bề mặt; 4 Bóng Mực; 2 Gió Lạc; 2 bùa gió.
-- Mang tối đa 8; Bóng Mực tốc độ 2,8 m/s; Gió Lạc tốc độ 2,0 m/s.
+- Mang tối đa 10; Bóng Mực tốc độ 2,8 m/s; Gió Lạc tốc độ 2,0 m/s.
 - Không gió mạnh, không tháp chuông.
 
 ### Night 3 — Ba tầng, dốc, bục nhảy, tháp chuông
@@ -141,8 +139,9 @@ không thêm điểm cho charm/wisp.
 
 ## 7. Điểm cần chủ dự án xác nhận
 
-- Giữ Night 1 đúng v1.0 (R=35, vành 20, 30 đom đóm, 3 Bóng Mực vành 27,
-  mang tối đa 5) để không phá regression Phase 1; chỉ tăng Night 2/3.
+- Night 1 theo checklist Phase 2: đảo R=40, vành đèn 25, 40 đom đóm,
+  Bóng Mực vành 32, mang tối đa 10; regression fall Phase 1 sẽ được cập nhật
+  biên bản theo bán kính mới.
 - Các số tuning mới (dash/glide/wisp/charm/wind/thời lượng Night 2/3).
 - Số đèn Night 2 (6) và Night 3 (7).
 - Điều kiện thắng Night 3 cần tháp chuông.
