@@ -128,7 +128,7 @@ không thêm điểm cho charm/wisp.
 
 ## 6. GUI và web
 
-- Godot 4.7.2, renderer `gl_compatibility`, 1280×720.
+- Godot 4.7.2, renderer `gl_compatibility`, 1280×720; camera follow/orbit tự viết, không dùng SpringArm3D.
 - Bản web local trước; export template web cần cài từ Godot.
 - Server local set COOP/COEP và MIME cho `.wasm`/`.pck`.
 - Bản web mặc định **không bật thread** để đơn giản host; nếu FPS thấp sẽ thử

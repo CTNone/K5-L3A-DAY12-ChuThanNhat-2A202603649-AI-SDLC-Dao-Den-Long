@@ -1,0 +1,213 @@
+{
+  "phase": 2,
+  "generated_at": "2026-11-20T16:39:55.967435+00:00",
+  "contract_version": "1.1",
+  "seed": 7,
+  "ticks": 600,
+  "checks": {
+    "compile": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-m",
+        "py_compile",
+        "game.py",
+        "tools/verify_phase1.py",
+        "tools/capture_phase1_evidence.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/compile.log"
+    },
+    "sync-check": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/sync_shared.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/sync-check.log"
+    },
+    "verify-phase1": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/verify_phase1.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/verify-phase1.log"
+    },
+    "verify-phase2": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/verify_phase2.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/verify-phase2.log"
+    },
+    "web-check": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/web-check.log"
+    },
+    "build-web": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/build_web.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-2/build-web.log"
+    },
+    "headless-night1": {
+      "cmd": "python game.py --headless --seed 7 --night 1 --ticks 600",
+      "exit": 0,
+      "out": "docs/proof/phase-2/night1-headless.jsonl"
+    },
+    "headless-night2": {
+      "cmd": "python game.py --headless --seed 7 --night 2 --ticks 600",
+      "exit": 0,
+      "out": "docs/proof/phase-2/night2-headless.jsonl"
+    },
+    "headless-night3": {
+      "cmd": "python game.py --headless --seed 7 --night 3 --ticks 600",
+      "exit": 0,
+      "out": "docs/proof/phase-2/night3-headless.jsonl"
+    },
+    "determinism-night3": {
+      "hashes": [
+        "f90f89746ed02e27e874d5d119312048427fa54221c1f0ec77d1dd89ea8744e1",
+        "f90f89746ed02e27e874d5d119312048427fa54221c1f0ec77d1dd89ea8744e1"
+      ],
+      "equal": true
+    },
+    "godot-capture": {
+      "cmd": "godot --path godot -- --capture",
+      "exit": 0
+    }
+  },
+  "failures": [],
+  "files": [
+    {
+      "path": "docs/proof/phase-2/build-web.log",
+      "bytes": 3290,
+      "sha256": "c7c7523977f46ae86e5a808b9f4680516cb35de39c6432180bb48e91f327a768"
+    },
+    {
+      "path": "docs/proof/phase-2/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/godot-capture.log",
+      "bytes": 476,
+      "sha256": "49a1dff81161ab1ccc4ad2acea810b25edd7fa73f5c2b96fb47a2674800ccba2"
+    },
+    {
+      "path": "docs/proof/phase-2/menu-1280x720.png",
+      "bytes": 167318,
+      "sha256": "1417198fd94b8be83a20661821fb6d082dd9c76a5e46ea52c46722644bce777b"
+    },
+    {
+      "path": "docs/proof/phase-2/night1-1280x720.png",
+      "bytes": 187453,
+      "sha256": "15384f0a8d858f1138ed4aacbad2e12bbfdf84b4bfd5d17f8e4282d389be74a2"
+    },
+    {
+      "path": "docs/proof/phase-2/night1-headless.jsonl",
+      "bytes": 45116,
+      "sha256": "91f094a3695d2368bc7d537295a67fecc67bcb4a2c0f1e6155ce6ab2b46c2c67"
+    },
+    {
+      "path": "docs/proof/phase-2/night1-headless.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/night2-headless.jsonl",
+      "bytes": 53436,
+      "sha256": "99983ed2b8d5fa8f983a08ae72161ee53ba5df292d215f78b2c3e190e4d1c052"
+    },
+    {
+      "path": "docs/proof/phase-2/night2-headless.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-1280x720.png",
+      "bytes": 215606,
+      "sha256": "58eb0be68450d68e18226a231d9cce7ca03576a124aad7b59d608f4df8819c11"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-determinism-1.jsonl",
+      "bytes": 35883,
+      "sha256": "f90f89746ed02e27e874d5d119312048427fa54221c1f0ec77d1dd89ea8744e1"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-determinism-1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-determinism-2.jsonl",
+      "bytes": 35883,
+      "sha256": "f90f89746ed02e27e874d5d119312048427fa54221c1f0ec77d1dd89ea8744e1"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-determinism-2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-headless.jsonl",
+      "bytes": 35883,
+      "sha256": "f90f89746ed02e27e874d5d119312048427fa54221c1f0ec77d1dd89ea8744e1"
+    },
+    {
+      "path": "docs/proof/phase-2/night3-headless.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-2/README.md",
+      "bytes": 1991,
+      "sha256": "c20d0e20e35f87cd89d8a16b7d7042c0bf414d19e9266d68587944ff0de0fafa"
+    },
+    {
+      "path": "docs/proof/phase-2/sync-check.log",
+      "bytes": 24,
+      "sha256": "41fe08141ae9fca9798bc68e35ddccddc78d41c27c3af0b2fcdfcc2269c77526"
+    },
+    {
+      "path": "docs/proof/phase-2/verify-phase1.log",
+      "bytes": 413,
+      "sha256": "35a02a4ee709df14ffb874fd0e2f770899c0d74c1d159d88d71c54fab5463f7a"
+    },
+    {
+      "path": "docs/proof/phase-2/verify-phase2.log",
+      "bytes": 641,
+      "sha256": "f5b1dbfd096abdd565152ad12d6b153ed8052b91e6311ddd71879c6da01cb13c"
+    },
+    {
+      "path": "docs/proof/phase-2/web-check.log",
+      "bytes": 388,
+      "sha256": "7bae228db7a508bee14657cab90c703514c902815d1dcf8e7a58d5ac1a15e5e5"
+    },
+    {
+      "path": "docs/proof/phase-2/web-intro.png",
+      "bytes": 150644,
+      "sha256": "dd36c48c6b9ae9618e24c0f030bf8f495b65b396ed8ba856ea506609da7c8896"
+    },
+    {
+      "path": "docs/proof/phase-2/web-menu.png",
+      "bytes": 143143,
+      "sha256": "e9dc3a7b92f8a25df0ff6a67c35299b5d36060a7566079728f00c74d73734db3"
+    },
+    {
+      "path": "docs/proof/phase-2/web-night1.png",
+      "bytes": 151211,
+      "sha256": "30dcfed8f77837a8606652feb8bc7d6da27a2ce941bd90915b3d2e015fd2a939"
+    }
+  ],
+  "git_head": "006d425d4f70452c4c3d609e38bf6d2a97eeb885"
+}

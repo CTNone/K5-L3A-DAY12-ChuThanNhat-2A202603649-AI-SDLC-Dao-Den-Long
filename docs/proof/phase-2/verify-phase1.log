@@ -1,0 +1,12 @@
+Phase 1 core checks passed:
+- headless simulation does not import Tkinter
+- contract tuning matches simulation constants
+- pickup, deposit and lantern lighting
+- pulse cost, stun and score
+- shade collision, health and dropped motes
+- island edge fall damage
+- loss at zero flames
+- dawn timeout
+- win and end bonus
+- same-seed deterministic JSONL output
+- invalid input and scenario exit with code 2

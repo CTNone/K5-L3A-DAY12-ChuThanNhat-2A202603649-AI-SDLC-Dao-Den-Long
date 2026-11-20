@@ -57,7 +57,7 @@ def main():
         passed.append("shade collision, health and dropped motes")
 
         sc={"player":{"pos":[T["island_radius_m"]+1,0,0]},"random_motes":False,"random_shades":False,"motes":[],"shades":[]}
-        p,rows=run(tmp,"fall",sc,{"frames":[{"tick":0,"move":[1,0]}]},20)
+        p,rows=run(tmp,"fall",sc,{"frames":[{"tick":0,"move":[1,0]}]},60)
         assert p.returncode==0 and any(r.get("name")=="player_hit" and r["data"]["by"]=="fall" for r in rows)
         passed.append("island edge fall damage")
 

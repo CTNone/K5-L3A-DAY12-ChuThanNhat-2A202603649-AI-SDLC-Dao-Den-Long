@@ -1,29 +1,28 @@
 # Day 12 — AI SDLC: Đảo Đèn Lồng
 
-## Bản game Phase 1
+## Bản game Phase 2
 
-Game hiện tại dùng Python 3.10+ và thư viện chuẩn. Trên Windows chạy bằng `python`; trên Linux/macOS dùng `python3`. Cần Tkinter để mở giao diện (trên một số Linux cần cài gói hệ điều hành `python3-tk`).
+Game dùng Python 3.10+ cho phần mô phỏng/headless và **Godot 4.7.2** cho GUI 3D thật. Trên Windows chạy bằng `python`; trên Linux/macOS dùng `python3`. Không cần Tkinter.
 
 ```bash
-python3 -m py_compile game.py
+python3 tools/sync_shared.py
+python3 tools/build_web.py
 python3 game.py
 ```
 
-Trên Windows thay `python3` bằng `python`. Điều khiển: WASD di chuyển, Space nhảy, E nhặt đom đóm hoặc nạp đèn, Q phát xung (tiêu 1 đom đóm đang mang), phím mũi tên trái/phải xoay camera, R chơi lại sau khi kết thúc, Esc thoát. Thắp cả 5 đèn để thắng; hết 3 lửa hoặc hết 300 giây thì thua.
+Trên Windows thay `python3` bằng `python`. Lần đầu cần cài Godot 4.7.2 và export templates Web. `python game.py` tự phục vụ `build/web` và mở trình duyệt; thêm `--build` để build lại trước khi chạy. Điều khiển: WASD di chuyển, chuột xoay camera, Space nhảy/giữ để liệng, Shift lướt, E nhặt đóm/nạp đèn, F xung sáng, Esc tạm dừng. Thắp đủ đèn và (đêm 3) đứng trong vùng tháp chuông để thắng.
 
-Chạy contract headless (không cần Tkinter, cửa sổ hay GPU):
+Chạy contract headless (không cần Godot, cửa sổ hay GPU):
 
 ```bash
 python3 game.py --headless --seed 7 --night 1 --ticks 600 --out out.jsonl
 ```
 
-`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` để tái lập các scenario kiểm tra; [bảng bằng chứng và artifact Phase 1](docs/proof/phase-1/README.md) gồm scenario, input, JSONL thô, lệnh, trạng thái exit và kết quả so sánh determinism. Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md).
-
-Contract khai báo toàn bộ thông số gameplay có thể chỉnh: ngoài các mục bắt buộc, `island_radius_m`, `jump_velocity_m_s` và `gravity_m_s2` điều khiển đảo và chuyển động nhảy; `lantern_ring_radius_m` và các mục `initial_*` mô tả bố trí/thực thể khởi tạo. Game không thiếu khái niệm nào trong contract nên không cần giá trị `null` hoặc `false` thay cho thông số; hiệu ứng trang trí chỉ dùng khi vẽ và không ảnh hưởng mô phỏng. Trong scenario, `time_left_s` (nếu có) đặt thời gian ban đầu của scenario; sau đó thời gian luôn bằng giá trị ban đầu trừ số tick mô phỏng chia 60, không phụ thuộc đồng hồ thực.
+`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` và `python3 tools/verify_phase2.py` để tái lập các scenario kiểm tra; bảng bằng chứng Phase 1 ở [docs/proof/phase-1/README.md](docs/proof/phase-1/README.md), Phase 2 ở [docs/proof/phase-2](docs/proof/phase-2). Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md), [docs/notes/phase-2-assumptions.md](docs/notes/phase-2-assumptions.md).
 
 ### Sáng tạo của tôi
 
-Đèn đã thắp có ba đom đóm trang trí bay vòng quanh. Đây chỉ là hiệu ứng vẽ, không thêm thực thể gameplay và không đổi contract output; bộ scenario headless vẫn đạt sau khi thêm hiệu ứng.
+GUI 3D có thêm đảo, đèn, đom đóm, bóng tối, tháp chuông và hiệu ứng ánh sáng/âm thanh trang trí. Đây chỉ là lớp trình bày, không thêm thực thể gameplay và không đổi contract output; bộ scenario headless vẫn đạt sau khi thêm hiệu ứng.
 
 > **Cá nhân** (1 người / 1 MSSV) · Áp dụng SDLC cùng AI để xây một **game 3D** qua **4 phase**, từ yêu cầu ban đầu tới bản phát hành.
 > **Lab board + trợ giảng:** **[Đảo Đèn Lồng Lab](https://claude.ai/artifact/Q1RYyv1dxjUczzCbd2ZnoW)**

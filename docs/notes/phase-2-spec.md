@@ -72,7 +72,7 @@ coi là số liệu cuối.
 ### AC-2.6 GUI 3D và UI
 
 - Godot 4.7, renderer compatibility, cửa sổ 1280×720.
-- World 3D thật: `Node3D`, `Camera3D` + `SpringArm3D`, player 3D, đèn, sương,
+- World 3D thật: `Node3D`, `Camera3D` + camera follow/orbit tự viết, player 3D, đèn, sương,
   ánh sáng; không dùng Tkinter cho GUI mới.
 - Chuỗi màn: menu → giới thiệu đêm → chơi → kết quả → đêm kế; thắng Night 3
   có màn Bình Minh; thua cho chơi lại đúng đêm.
@@ -86,7 +86,7 @@ coi là số liệu cuối.
 
 - `python3 tools/build_web.py` xuất Godot web vào `build/web/`.
 - `python3 tools/serve_web.py` phục vụ local với COOP/COEP và MIME đúng.
-- Mở được bằng Chrome/Edge/Firefox; ghi phiên bản trình duyệt và kết quả.
+- Đã kiểm tra Chrome 157 headless (SwiftShader) với WebGL 2.0; Edge/Firefox và macOS/Linux chưa kiểm tra.
 - Không commit `build/web/`; có thể phát hành artifact ở Phase 4.
 
 ### AC-2.8 Kiểm chứng và bằng chứng
