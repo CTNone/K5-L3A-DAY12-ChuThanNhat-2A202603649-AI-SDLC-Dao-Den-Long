@@ -17,7 +17,9 @@ Chạy contract headless (không cần Tkinter, cửa sổ hay GPU):
 python3 game.py --headless --seed 7 --night 1 --ticks 600 --out out.jsonl
 ```
 
-`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` để tái lập các scenario kiểm tra; bằng chứng ghi tại `docs/proof/phase-1-core-verification.txt`. Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md).
+`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` để tái lập các scenario kiểm tra; [bảng bằng chứng và artifact Phase 1](docs/proof/phase-1/README.md) gồm scenario, input, JSONL thô, lệnh, trạng thái exit và kết quả so sánh determinism. Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md).
+
+Contract khai báo toàn bộ thông số gameplay có thể chỉnh: ngoài các mục bắt buộc, `island_radius_m`, `jump_velocity_m_s` và `gravity_m_s2` điều khiển đảo và chuyển động nhảy; `lantern_ring_radius_m` và các mục `initial_*` mô tả bố trí/thực thể khởi tạo. Game không thiếu khái niệm nào trong contract nên không cần giá trị `null` hoặc `false` thay cho thông số; hiệu ứng trang trí chỉ dùng khi vẽ và không ảnh hưởng mô phỏng. Trong scenario, `time_left_s` (nếu có) đặt thời gian ban đầu của scenario; sau đó thời gian luôn bằng giá trị ban đầu trừ số tick mô phỏng chia 60, không phụ thuộc đồng hồ thực.
 
 ### Sáng tạo của tôi
 

@@ -1,0 +1,3 @@
+seed=909 scenario=determinism-a/b ticks=60
+byte_identical=true
+bytes=3567

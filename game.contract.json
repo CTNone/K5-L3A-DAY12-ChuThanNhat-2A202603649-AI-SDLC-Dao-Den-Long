@@ -24,6 +24,14 @@
     "shade_speed": 2.5,
     "shade_hit_radius": 1.0,
     "fall_enabled": true,
+    "island_radius_m": 35.0,
+    "jump_velocity_m_s": 7.0,
+    "gravity_m_s2": 18.0,
+    "lantern_ring_radius_m": 20.0,
+    "initial_mote_count": 30,
+    "initial_mote_spawn_radius_m": 28.0,
+    "initial_shade_count": 3,
+    "initial_shade_spawn_radius_m": 27.0,
     "score": { "per_mote": 10, "per_lantern": 100, "per_stun": 25, "per_second_left": 1, "per_flame_left": 50 }
   }
 }

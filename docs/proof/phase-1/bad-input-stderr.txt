@@ -1,0 +1,1 @@
+error: move components must be finite and in [-1,1]

@@ -1,0 +1,5 @@
+{"type":"event","tick":0,"name":"shade_spawned","data":{"id":"S1"}}
+{"type":"event","tick":0,"name":"shade_spawned","data":{"id":"S2"}}
+{"type":"event","tick":0,"name":"shade_spawned","data":{"id":"S3"}}
+{"type":"snapshot","tick":0,"sim_tick":0,"state":"playing","time_left_s":300.0,"score":0,"player":{"pos":[0.0,0.0,0.0],"flames":3,"carried":0},"lanterns":[{"id":"L1","pos":[20.0,0.0,0.0],"lit":false,"deposited":0},{"id":"L2","pos":[6.18,0.0,19.021],"lit":false,"deposited":0},{"id":"L3","pos":[-16.18,0.0,11.756],"lit":false,"deposited":0},{"id":"L4","pos":[-16.18,0.0,-11.756],"lit":false,"deposited":0},{"id":"L5","pos":[6.18,0.0,-19.021],"lit":false,"deposited":0}],"shades":[{"id":"S1","pos":[27.0,0.0,0.0],"state":"chase"},{"id":"S2","pos":[-13.5,0.0,23.383],"state":"chase"},{"id":"S3","pos":[-13.5,0.0,-23.383],"state":"chase"}],"motes_active":30}
+{"type":"end","ticks":0,"state":"playing","score":0}
