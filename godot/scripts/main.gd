@@ -8,12 +8,29 @@ const MAP_PATHS := {
 }
 const SETTINGS_PATH := "user://settings.cfg"
 const AUDIO_SCRIPT := preload("res://scripts/audio_manager.gd")
+const DEFAULT_BINDS := {
+	"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D,
+	"jump": KEY_SPACE, "dash": KEY_SHIFT, "interact": KEY_E, "pulse": KEY_F, "pause": KEY_ESCAPE,
+}
+const BIND_LABELS := {
+	"move_forward": "Tiến", "move_back": "Lùi", "move_left": "Trái", "move_right": "Phải",
+	"jump": "Nhảy / liệng", "dash": "Lướt", "interact": "Tương tác", "pulse": "Xung sáng", "pause": "Tạm dừng",
+}
 
 var T: Dictionary = {}
 var map: Dictionary = {}
 var night := 1
 var state := "menu"
-var settings := {"master": 0.8, "music": 0.55, "sfx": 0.8, "sensitivity": 1.0, "color_mode": "default"}
+var settings := {"master": 0.8, "music": 0.55, "sfx": 0.8, "sensitivity": 1.0, "color_mode": "default",
+	"facing": "camera", "reduce_motion": false, "text_scale": 1.0, "admin": false}
+var cheat_invincible := false
+var cheat_fuel := false
+var cheat_speed := false
+var cheat_reveal := false
+var bindings: Dictionary = {}
+var rebind_action := ""
+var rebind_buttons: Dictionary = {}
+var rebind_status: Label
 
 var world_root: Node3D
 var player: Node3D
@@ -88,6 +105,7 @@ var end_title: Label
 var end_detail: Label
 var end_score: Label
 var end_next: Button
+var end_leaderboard: Button
 var hud_layer: CanvasLayer
 var hud_root: Control
 var hud_flames: Label
@@ -111,12 +129,24 @@ var hud_pulse: ProgressBar
 var hud_dash_label: Label
 var hud_pulse_label: Label
 var color_mode_button: OptionButton
+var facing_button: OptionButton
+var text_scale_button: OptionButton
+var reduce_motion_check: CheckBox
+var admin_check: CheckBox
+var leaderboard_box: VBoxContainer
+var leaderboard_name: LineEdit
+var leaderboard_save: Button
+var leaderboard_list: Label
+var leaderboard_layer: CanvasLayer
+var leaderboard_root: Control
+var leaderboard_from_end := false
 
 
 func _ready() -> void:
 	var tuning_doc := _read_json(TUNING_PATH)
 	T = tuning_doc.get("tuning", {})
 	_load_settings()
+	_setup_input()
 	_setup_environment()
 	world_root = Node3D.new()
 	world_root.name = "World"
@@ -324,12 +354,17 @@ func _create_ui() -> void:
 	end_root = _full_control(end_layer)
 	_build_end()
 
+	leaderboard_layer = _canvas(16)
+	leaderboard_root = _full_control(leaderboard_layer)
+	_build_leaderboard()
+
 	hud_root.visible = false
 	intro_root.visible = false
 	settings_root.visible = false
 	controls_root.visible = false
 	pause_root.visible = false
 	end_root.visible = false
+	leaderboard_root.visible = false
 
 
 func _canvas(layer_index: int) -> CanvasLayer:
@@ -383,7 +418,8 @@ func _button_style(bg: Color, border: Color) -> StyleBoxFlat:
 func _label(text: String, size := 18, color := Color(0.9, 0.94, 1.0)) -> Label:
 	var label := Label.new()
 	label.text = text
-	label.add_theme_font_size_override("font_size", size)
+	var scaled := int(maxi(18, roundi(float(size) * float(settings.get("text_scale", 1.0)))))
+	label.add_theme_font_size_override("font_size", scaled)
 	label.add_theme_color_override("font_color", color)
 	return label
 
@@ -457,6 +493,7 @@ func _build_menu() -> void:
 	box.add_child(_button("Đêm 3  •  Tháp Chuông", _show_intro.bind(3)))
 	box.add_child(_button("Cài đặt", _show_settings.bind(false)))
 	box.add_child(_button("Điều khiển", _show_controls))
+	box.add_child(_button("Bảng điểm", _show_leaderboard.bind(false)))
 	box.add_child(_button("Thoát", _quit_game))
 	var hint := _label("Chuột: nhìn  •  WASD: di chuyển  •  Space: nhảy/liệng  •  E: tương tác  •  F: xung sáng  •  Shift: lướt", 13, Color(0.58, 0.68, 0.82))
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -522,6 +559,38 @@ func _build_settings() -> void:
 	color_mode_button.custom_minimum_size = Vector2(420.0, 30.0)
 	color_mode_button.item_selected.connect(_on_color_mode_selected)
 	color_row.add_child(color_mode_button)
+	var facing_row := _vbox(box, 3)
+	facing_row.add_child(_label("Hướng nhân vật", 18, Color(0.82, 0.88, 1.0)))
+	facing_button = OptionButton.new()
+	facing_button.add_item("Theo camera", 0)
+	facing_button.add_item("Theo hướng di chuyển", 1)
+	facing_button.selected = 1 if str(settings["facing"]) == "movement" else 0
+	facing_button.custom_minimum_size = Vector2(420.0, 34.0)
+	facing_button.add_theme_font_size_override("font_size", 18)
+	facing_button.item_selected.connect(_on_facing_selected)
+	facing_row.add_child(facing_button)
+	var scale_row := _vbox(box, 3)
+	scale_row.add_child(_label("Cỡ chữ (áp dụng sau khi mở lại)", 18, Color(0.82, 0.88, 1.0)))
+	text_scale_button = OptionButton.new()
+	text_scale_button.add_item("100%", 0)
+	text_scale_button.add_item("125%", 1)
+	text_scale_button.selected = 1 if float(settings["text_scale"]) > 1.0 else 0
+	text_scale_button.custom_minimum_size = Vector2(420.0, 34.0)
+	text_scale_button.add_theme_font_size_override("font_size", 18)
+	text_scale_button.item_selected.connect(_on_text_scale_selected)
+	scale_row.add_child(text_scale_button)
+	reduce_motion_check = CheckBox.new()
+	reduce_motion_check.text = "Giảm chuyển động"
+	reduce_motion_check.button_pressed = bool(settings["reduce_motion"])
+	reduce_motion_check.add_theme_font_size_override("font_size", 18)
+	reduce_motion_check.toggled.connect(_on_reduce_motion_toggled)
+	box.add_child(reduce_motion_check)
+	admin_check = CheckBox.new()
+	admin_check.text = "Admin: bật cheat khi chơi (không lưu bảng điểm)"
+	admin_check.button_pressed = bool(settings["admin"])
+	admin_check.add_theme_font_size_override("font_size", 18)
+	admin_check.toggled.connect(_on_admin_toggled)
+	box.add_child(admin_check)
 	box.add_child(_button("Lưu và quay lại", _close_settings))
 
 
@@ -626,8 +695,123 @@ func _build_end() -> void:
 	box.add_child(end_score)
 	end_next = _button("Đêm kế tiếp", _on_next)
 	box.add_child(end_next)
+	end_leaderboard = _button("Lưu vào bảng điểm", _show_leaderboard.bind(true))
+	box.add_child(end_leaderboard)
 	box.add_child(_button("Chơi lại", _on_retry))
 	box.add_child(_button("Về menu", _show_menu))
+
+
+func _build_leaderboard() -> void:
+	var bg := ColorRect.new()
+	bg.color = Color(0.008, 0.012, 0.035, 0.9)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	leaderboard_root.add_child(bg)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var center := CenterContainer.new()
+	leaderboard_root.add_child(center)
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var panel := _panel(Vector2(640.0, 0.0))
+	center.add_child(panel)
+	var margin := _margin(panel, 28)
+	var box := _vbox(margin, 12)
+	var title := _label("BẢNG ĐIỂM", 34, Color(1.0, 0.82, 0.42))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(title)
+	leaderboard_list = _label("", 18, Color(0.82, 0.9, 1.0))
+	leaderboard_list.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	leaderboard_list.custom_minimum_size = Vector2(580.0, 260.0)
+	box.add_child(leaderboard_list)
+	leaderboard_box = _vbox(box, 8)
+	leaderboard_name = LineEdit.new()
+	leaderboard_name.placeholder_text = "Tên 3-12 ký tự"
+	leaderboard_name.max_length = 12
+	leaderboard_name.custom_minimum_size = Vector2(560.0, 40.0)
+	leaderboard_name.add_theme_font_size_override("font_size", 18)
+	leaderboard_box.add_child(leaderboard_name)
+	leaderboard_save = _button("Lưu điểm", _save_leaderboard_entry)
+	leaderboard_box.add_child(leaderboard_save)
+	box.add_child(_button("Đóng", _close_leaderboard))
+	box.add_child(_button("Về menu", _show_menu))
+
+
+func _show_leaderboard(from_end: bool) -> void:
+	leaderboard_from_end = from_end
+	leaderboard_root.visible = true
+	end_root.visible = false
+	menu_root.visible = false
+	pause_root.visible = false
+	leaderboard_box.visible = from_end and not bool(settings["admin"])
+	leaderboard_name.text = ""
+	_refresh_leaderboard()
+	state = "leaderboard"
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _close_leaderboard() -> void:
+	leaderboard_root.visible = false
+	if leaderboard_from_end:
+		end_root.visible = true
+		state = "won" if won else "lost"
+	else:
+		_show_menu()
+
+
+func _refresh_leaderboard() -> void:
+	var entries := _load_leaderboard()
+	var lines: Array[String] = []
+	for i in mini(entries.size(), 10):
+		var e: Dictionary = entries[i]
+		lines.append("%d. %s  %d điểm  %d đêm  %s" % [i + 1, str(e.get("name", "?")), int(e.get("score", 0)), int(e.get("nights_won", 0)), str(e.get("achieved_at", ""))])
+	if lines.is_empty():
+		lines.append("Chưa có ai trên bảng điểm.")
+	leaderboard_list.text = "\n".join(lines)
+
+
+func _load_leaderboard() -> Array:
+	var entries: Array = []
+	if not FileAccess.file_exists("user://leaderboard.json"):
+		return entries
+	var file := FileAccess.open("user://leaderboard.json", FileAccess.READ)
+	if file == null:
+		return entries
+	var data = JSON.parse_string(file.get_as_text())
+	if data is Array:
+		entries = data
+	elif data is Dictionary and data.get("entries") is Array:
+		entries = data["entries"]
+	var valid: Array = []
+	for raw in entries:
+		if not raw is Dictionary:
+			continue
+		var name := str(raw.get("name", "")).strip_edges()
+		if name.length() < 3 or name.length() > 12:
+			continue
+		valid.append({"name": name, "score": int(raw.get("score", 0)), "nights_won": int(raw.get("nights_won", 0)),
+			"achieved_at": str(raw.get("achieved_at", "")), "seed": int(raw.get("seed", 1))})
+	valid.sort_custom(func(a, b): return int(a["score"]) > int(b["score"]) or (int(a["score"]) == int(b["score"]) and str(a["achieved_at"]) < str(b["achieved_at"])))
+	return valid.slice(0, 10)
+
+
+func _save_leaderboard_entry() -> void:
+	var name := leaderboard_name.text.strip_edges()
+	if name.length() < 3 or name.length() > 12:
+		leaderboard_name.placeholder_text = "Tên phải từ 3 đến 12 ký tự"
+		return
+	if bool(settings["admin"]):
+		leaderboard_name.text = ""
+		return
+	var achieved := Time.get_datetime_string_from_system(true) + "Z"
+	var entry := {"name": name, "score": score, "nights_won": night if won else max(0, night - 1), "achieved_at": achieved, "seed": 1}
+	var entries := _load_leaderboard()
+	entries.append(entry)
+	entries.sort_custom(func(a, b): return int(a["score"]) > int(b["score"]) or (int(a["score"]) == int(b["score"]) and str(a["achieved_at"]) < str(b["achieved_at"])))
+	entries = entries.slice(0, 10)
+	var file := FileAccess.open("user://leaderboard.json", FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify({"version": 1, "entries": entries}, "  "))
+	leaderboard_name.text = ""
+	leaderboard_box.visible = false
+	_refresh_leaderboard()
 
 
 func _build_hud() -> void:
@@ -815,9 +999,11 @@ func start_night(n: int) -> void:
 	controls_root.visible = false
 	pause_root.visible = false
 	end_root.visible = false
+	leaderboard_root.visible = false
 	hud_root.visible = true
 	state = "playing"
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	audio.unlock()
 	audio.play("ui")
 
 
@@ -829,6 +1015,7 @@ func _show_menu() -> void:
 	controls_root.visible = false
 	pause_root.visible = false
 	end_root.visible = false
+	leaderboard_root.visible = false
 	hud_root.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	audio.play("ui")
@@ -857,6 +1044,7 @@ func _show_intro(n: int) -> void:
 	controls_root.visible = false
 	pause_root.visible = false
 	end_root.visible = false
+	leaderboard_root.visible = false
 	hud_root.visible = false
 	state = "intro"
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -873,6 +1061,7 @@ func _show_settings(from_pause: bool) -> void:
 	intro_root.visible = false
 	controls_root.visible = false
 	pause_root.visible = false
+	leaderboard_root.visible = false
 	settings_root.visible = true
 	state = "settings"
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -894,6 +1083,7 @@ func _show_controls() -> void:
 	intro_root.visible = false
 	settings_root.visible = false
 	pause_root.visible = false
+	leaderboard_root.visible = false
 	controls_root.visible = true
 	state = "controls"
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -950,6 +1140,31 @@ func _on_color_mode_selected(index: int) -> void:
 	_apply_color_mode()
 
 
+func _on_facing_selected(index: int) -> void:
+	settings["facing"] = "movement" if index == 1 else "camera"
+	_save_settings()
+
+
+func _on_text_scale_selected(index: int) -> void:
+	settings["text_scale"] = 1.25 if index == 1 else 1.0
+	_save_settings()
+
+
+func _on_reduce_motion_toggled(value: bool) -> void:
+	settings["reduce_motion"] = value
+	_save_settings()
+
+
+func _on_admin_toggled(value: bool) -> void:
+	settings["admin"] = value
+	if not value:
+		cheat_invincible = false
+		cheat_fuel = false
+		cheat_speed = false
+		cheat_reveal = false
+	_save_settings()
+
+
 func _apply_color_mode() -> void:
 	for lantern in lanterns:
 		_refresh_lantern(lantern)
@@ -975,6 +1190,18 @@ func _load_settings() -> void:
 	settings["color_mode"] = str(cfg.get_value("display", "color_mode", settings["color_mode"]))
 	if settings["color_mode"] != "colorblind":
 		settings["color_mode"] = "default"
+	settings["facing"] = str(cfg.get_value("display", "facing", settings["facing"]))
+	if settings["facing"] != "movement":
+		settings["facing"] = "camera"
+	settings["reduce_motion"] = bool(cfg.get_value("display", "reduce_motion", settings["reduce_motion"]))
+	settings["text_scale"] = clampf(float(cfg.get_value("display", "text_scale", settings["text_scale"])), 1.0, 1.25)
+	settings["admin"] = bool(cfg.get_value("admin", "enabled", settings["admin"]))
+	bindings = DEFAULT_BINDS.duplicate()
+	var raw_binds = cfg.get_value("input", "binds", {})
+	if raw_binds is Dictionary:
+		for action in DEFAULT_BINDS.keys():
+			if raw_binds.has(action):
+				bindings[action] = int(raw_binds[action])
 
 
 func _save_settings() -> void:
@@ -984,7 +1211,59 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "sfx", settings["sfx"])
 	cfg.set_value("input", "sensitivity", settings["sensitivity"])
 	cfg.set_value("display", "color_mode", settings["color_mode"])
+	cfg.set_value("display", "facing", settings["facing"])
+	cfg.set_value("display", "reduce_motion", settings["reduce_motion"])
+	cfg.set_value("display", "text_scale", settings["text_scale"])
+	cfg.set_value("admin", "enabled", settings["admin"])
+	cfg.set_value("input", "binds", bindings)
 	cfg.save(SETTINGS_PATH)
+
+
+func _setup_input() -> void:
+	if bindings.is_empty():
+		bindings = DEFAULT_BINDS.duplicate()
+	for action in DEFAULT_BINDS.keys():
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		InputMap.action_erase_events(action)
+		var event := InputEventKey.new()
+		event.physical_keycode = int(bindings.get(action, DEFAULT_BINDS[action]))
+		InputMap.action_add_event(action, event)
+
+
+func _key_name(keycode: int) -> String:
+	return OS.get_keycode_string(keycode)
+
+
+func _begin_rebind(action: String, button: Button) -> void:
+	rebind_action = action
+	button.text = "Nhấn phím..."
+	rebind_status.text = "Đang đổi phím cho: " + str(BIND_LABELS.get(action, action))
+
+
+func _bind_key(keycode: int) -> void:
+	if rebind_action == "":
+		return
+	for action in bindings.keys():
+		if action != rebind_action and int(bindings[action]) == keycode:
+			rebind_status.text = "Phím đã dùng cho: " + str(BIND_LABELS.get(action, action))
+			return
+	bindings[rebind_action] = keycode
+	_setup_input()
+	_save_settings()
+	if rebind_buttons.has(rebind_action):
+		rebind_buttons[rebind_action].text = _key_name(keycode)
+	rebind_status.text = "Đã đổi phím."
+	rebind_action = ""
+
+
+func _reset_bindings() -> void:
+	bindings = DEFAULT_BINDS.duplicate()
+	_setup_input()
+	_save_settings()
+	for action in rebind_buttons.keys():
+		rebind_buttons[action].text = _key_name(int(bindings[action]))
+	rebind_status.text = "Đã khôi phục phím mặc định."
 
 
 func _read_json(path: String) -> Dictionary:
@@ -1246,6 +1525,19 @@ func _drain_lanterns(delta: float) -> void:
 func _update_game(delta: float) -> void:
 	if state != "playing":
 		return
+	if bool(settings["admin"]):
+		if cheat_invincible:
+			invuln = max(invuln, 2.0)
+		if cheat_fuel:
+			carried = _capacity()
+			for lantern in lanterns:
+				lantern["lit"] = true
+				lantern["fuel"] = int(T["lantern_fuel_max"])
+				_refresh_lantern(lantern)
+		if cheat_reveal:
+			for lantern in lanterns:
+				lantern["light"].light_energy = max(float(lantern["light"].light_energy), 2.0)
+				lantern["light"].omni_range = max(float(lantern["light"].omni_range), 18.0)
 	sim_time += delta
 	time_left -= delta
 	dash_cd = max(0.0, dash_cd - delta)
@@ -1254,13 +1546,13 @@ func _update_game(delta: float) -> void:
 	wind_shield = max(0.0, wind_shield - delta)
 
 	var input_vec := Vector2.ZERO
-	if Input.is_physical_key_pressed(KEY_W):
+	if Input.is_action_pressed("move_forward"):
 		input_vec.y -= 1.0
-	if Input.is_physical_key_pressed(KEY_S):
+	if Input.is_action_pressed("move_back"):
 		input_vec.y += 1.0
-	if Input.is_physical_key_pressed(KEY_A):
+	if Input.is_action_pressed("move_left"):
 		input_vec.x -= 1.0
-	if Input.is_physical_key_pressed(KEY_D):
+	if Input.is_action_pressed("move_right"):
 		input_vec.x += 1.0
 	if input_vec.length() > 1.0:
 		input_vec = input_vec.normalized()
@@ -1270,7 +1562,7 @@ func _update_game(delta: float) -> void:
 	if move_dir.length() > 1.0:
 		move_dir = move_dir.normalized()
 
-	var dash_down := Input.is_physical_key_pressed(KEY_SHIFT)
+	var dash_down := Input.is_action_pressed("dash")
 	if dash_down and not dash_held and dash_cd <= 0.0 and on_ground and move_dir.length() > 0.05:
 		dash_dir = move_dir.normalized()
 		dash_t = float(T["dash_duration_s"])
@@ -1278,12 +1570,13 @@ func _update_game(delta: float) -> void:
 		audio.play("dash")
 	dash_held = dash_down
 
+	var speed_scale := 2.0 if bool(settings["admin"]) and cheat_speed else 1.0
 	var velocity := Vector3.ZERO
 	if dash_t > 0.0:
 		dash_t = max(0.0, dash_t - delta)
-		velocity = dash_dir * float(T["dash_speed_m_s"])
+		velocity = dash_dir * float(T["dash_speed_m_s"]) * speed_scale
 	else:
-		velocity = move_dir * float(T["player_speed"])
+		velocity = move_dir * float(T["player_speed"]) * speed_scale
 	_try_move(velocity * delta)
 
 	var wind := _wind_at(pos)
@@ -1292,7 +1585,7 @@ func _update_game(delta: float) -> void:
 		if audio != null and randf() < delta * 2.0:
 			audio.play("wind", -16.0)
 
-	var jump_down := Input.is_physical_key_pressed(KEY_SPACE)
+	var jump_down := Input.is_action_pressed("jump")
 	if jump_down and not jump_held and on_ground:
 		vy = float(T["jump_velocity_m_s"])
 		on_ground = false
@@ -1328,12 +1621,12 @@ func _update_game(delta: float) -> void:
 		if _wind_at(pos) == Vector3.ZERO:
 			safe_pos = pos
 
-	var interact_down := Input.is_physical_key_pressed(KEY_E)
+	var interact_down := Input.is_action_pressed("interact")
 	if interact_down and not interact_held:
 		_interact()
 	interact_held = interact_down
 
-	var pulse_down := Input.is_physical_key_pressed(KEY_F)
+	var pulse_down := Input.is_action_pressed("pulse")
 	if pulse_down and not pulse_held and pulse_cd <= 0.0 and carried >= int(T["pulse_cost"]):
 		carried -= int(T["pulse_cost"])
 		pulse_cd = float(T["pulse_cooldown_s"])
@@ -1421,7 +1714,8 @@ func _update_game(delta: float) -> void:
 
 	if state != "playing":
 		return
-	_drain_lanterns(delta)
+	if not (bool(settings["admin"]) and cheat_fuel):
+		_drain_lanterns(delta)
 	if state != "playing":
 		return
 	if pos.y < float(T["fall_y_m"]) and invuln <= 0.0:
@@ -1528,6 +1822,7 @@ func _end_game(did_win: bool, reason: String) -> void:
 	end_detail.text = _reason_text(reason)
 	end_score.text = "ĐIỂM  %d" % score
 	end_next.visible = did_win and night < 3
+	end_leaderboard.visible = ((did_win and night == 3) or not did_win) and not bool(settings["admin"])
 	end_root.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_update_hud()
@@ -1546,6 +1841,8 @@ func _reason_text(reason: String) -> String:
 
 
 func _flash(color: Color) -> void:
+	if bool(settings["reduce_motion"]):
+		return
 	var rect := ColorRect.new()
 	rect.color = Color(color.r, color.g, color.b, 0.42)
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1562,7 +1859,8 @@ func _update_camera(delta: float) -> void:
 	if state == "menu" or state == "intro" or state == "controls" or state == "settings":
 		target = Vector3(-5.0, 2.2, 0.0)
 		distance = 16.0
-		cam_yaw += delta * 0.08
+		if not bool(settings["reduce_motion"]):
+			cam_yaw += delta * 0.08
 	var horizontal := cos(cam_pitch) * distance
 	var offset := Vector3(sin(cam_yaw) * horizontal, 2.0 - sin(cam_pitch) * distance, cos(cam_yaw) * horizontal)
 	var desired := target + offset
@@ -1589,32 +1887,65 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton or (event is InputEventKey and event.pressed):
+		if audio != null:
+			audio.unlock()
 	if event is InputEventMouseMotion and state == "playing":
 		cam_yaw -= event.relative.x * 0.0024 * float(settings["sensitivity"])
 		cam_pitch = clampf(cam_pitch - event.relative.y * 0.0019 * float(settings["sensitivity"]), -0.78, 0.22)
 	if event is InputEventKey and event.pressed and not event.echo:
+		if rebind_action != "":
+			_bind_key(event.physical_keycode)
+			return
+		if event.ctrl_pressed and event.shift_pressed and bool(settings["admin"]):
+			_handle_admin_key(event.physical_keycode)
+			return
 		if event.physical_keycode == KEY_ESCAPE:
 			if state == "playing":
 				_pause_game()
 			elif state == "paused":
 				_resume_game()
-			elif state == "intro" or state == "controls" or state == "settings":
+			elif state == "intro" or state == "controls" or state == "settings" or state == "leaderboard":
 				_show_menu()
+
+
+func _handle_admin_key(keycode: int) -> void:
+	match keycode:
+		KEY_1:
+			cheat_invincible = not cheat_invincible
+		KEY_2:
+			cheat_fuel = not cheat_fuel
+		KEY_3:
+			if state == "playing":
+				_end_game(true, "dawn")
+		KEY_4:
+			cheat_speed = not cheat_speed
+		KEY_5:
+			cheat_reveal = not cheat_reveal
+		KEY_6:
+			var turn_on := not (cheat_invincible and cheat_fuel and cheat_speed and cheat_reveal)
+			cheat_invincible = turn_on
+			cheat_fuel = turn_on
+			cheat_speed = turn_on
+			cheat_reveal = turn_on
 
 
 func _update_visuals(delta: float) -> void:
 	player.position = pos
-	if move_dir.length() > 0.05:
-		player.rotation.y = lerp_angle(player.rotation.y, atan2(move_dir.x, move_dir.z), minf(1.0, delta * 12.0))
-	if move_dir.length() > 0.05 and on_ground:
+	var reduced := bool(settings["reduce_motion"])
+	var face_movement := str(settings["facing"]) == "movement" and move_dir.length() > 0.05
+	var desired_yaw := atan2(move_dir.x, move_dir.z) if face_movement else atan2(-sin(cam_yaw), -cos(cam_yaw))
+	player.rotation.y = lerp_angle(player.rotation.y, desired_yaw, minf(1.0, delta * 12.0))
+	if move_dir.length() > 0.05 and on_ground and not reduced:
 		player_body.position.y = 0.85 + sin(sim_time * 9.0) * 0.025
 	else:
 		player_body.position.y = 0.85
-	player_light.light_energy = 1.1 + sin(sim_time * 4.0) * 0.15
+	player_light.light_energy = 1.1 + (0.0 if reduced else sin(sim_time * 4.0) * 0.15)
 	for mote in motes:
-		var bob := 0.45 + sin(sim_time * 2.2 + float(mote["phase"])) * 0.13
-		mote["node"].position = Vector3(mote["pos"].x, mote["pos"].y + bob, mote["pos"].z)
-		mote["node"].rotate_y(delta * 1.8)
+		var bob := 0.0 if reduced else sin(sim_time * 2.2 + float(mote["phase"])) * 0.13
+		mote["node"].position = Vector3(mote["pos"].x, mote["pos"].y + 0.45 + bob, mote["pos"].z)
+		if not reduced:
+			mote["node"].rotate_y(delta * 1.8)
 	for shade in shades:
 		var h = _surface_height(shade["pos"].x, shade["pos"].z)
 		var y := (float(h) if h != null else 0.0) + 0.75
@@ -1640,7 +1971,7 @@ func _update_hud() -> void:
 	hud_flames.text = "LỬA  %d/3" % flames
 	var seconds := int(ceil(max(0.0, time_left)))
 	hud_timer.text = "%02d:%02d" % [int(seconds / 60), seconds % 60]
-	hud_timer.add_theme_color_override("font_color", Color(1.0, 0.45, 0.4) if time_left < 30.0 else Color(0.82, 0.92, 1.0))
+	hud_timer.add_theme_color_override("font_color", Color(1.0, 0.45, 0.4) if time_left < 10.0 else Color(0.82, 0.92, 1.0))
 	hud_night.text = "ĐÊM %d  •  %s" % [night, str(map.get("name", ""))]
 	hud_score.text = "ĐIỂM  %d" % score
 	var lit := _lit_count()
@@ -1724,8 +2055,8 @@ func _prompt_text() -> String:
 func _warning_text() -> String:
 	if flames <= 1:
 		return "⚠ NGỌN LỬA CUỐI CÙNG!"
-	if time_left <= 30.0:
-		return "⚠ BÌNH MINH SẮP ĐẾN!"
+	if time_left <= 10.0:
+		return "⚠ 10 GIÂY CUỐI — BÌNH MINH SẮP ĐẾN!"
 	for lantern in lanterns:
 		if bool(lantern["lit"]) and int(lantern["fuel"]) < int(T["safe_fuel_threshold"]):
 			return "⚠ DẦU ĐÈN DƯỚI 30 — VÙNG AN TOÀN ĐÃ MẤT"

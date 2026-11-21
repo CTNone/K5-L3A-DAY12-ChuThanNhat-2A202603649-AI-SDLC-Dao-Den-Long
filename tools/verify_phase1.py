@@ -40,8 +40,8 @@ def main():
     assert "tkinter" not in sys.modules
     passed.append("headless simulation does not import Tkinter")
     contract=json.loads((ROOT/"game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"]=="1.2" and contract["tuning"]==T
-    passed.append("contract v1.2 tuning matches simulation constants")
+    assert contract["contract_version"] in ("1.2", "1.3") and contract["tuning"]==T
+    passed.append("contract v1.2/v1.3 tuning matches simulation constants")
     with tempfile.TemporaryDirectory() as tmp:
         # Phase 3: 10 motes are needed to light a new lantern. The first ten
         # interactions pick up motes; the eleventh lights L1 and sets fuel=100.

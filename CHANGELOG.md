@@ -1,5 +1,30 @@
 # Changelog
 
+## Phase 4 — v1.0.0
+
+### Added
+
+- Contract `1.3` với `bench_cmd`, `soak_cmd`, `leaderboard_cmd`, `leaderboard`,
+  `accessibility`, `input`; giữ nguyên contract gameplay.
+- CLI `--bench`, `--soak`, `--export-leaderboard`, `--leaderboard-file`.
+- `leaderboard.py` và bảng điểm GUI top 10, lưu `user://leaderboard.json`.
+- Audio unlock sau thao tác người dùng; bỏ autoplay khi mở game.
+- Admin cheat có checkbox và hotkey; admin không ghi bảng điểm.
+- InputMap đổi phím, phát hiện trùng phím, khôi phục mặc định.
+- Accessibility: chữ tối thiểu 18 px, cỡ 125%, giảm chuyển động, hướng nhân vật.
+- Cảnh báo 10 giây cuối, shade gần, gió mạnh và dầu thấp.
+- `LICENSE` MIT, `CREDITS.md`, `Dockerfile`, ghi chú Phase 4 và video demo.
+
+### Fixed
+
+- `_build_leaderboard` không còn dùng `String.strip()` (Godot 4 dùng `strip_edges()`).
+- Soak đọc RSS đúng trên Windows bằng `GetProcessMemoryInfo`.
+
+### Known limitations
+
+- Benchmark là mô phỏng headless, không phải FPS 3D trên GPU.
+- Chưa có bằng chứng chạy GUI thật trên macOS/Linux.
+
 ## Phase 3 — v1.2
 
 ### Breaking changes

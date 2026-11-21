@@ -13,8 +13,8 @@
 | CP1 | Xong | Tag `phase-1` đã có cả local và remote; evidence Phase 1 đầy đủ. |
 | CP2 | Code/evidence xong | Tag `phase-2` mới có ở local, **chưa push remote**. |
 | CP3 | Code/evidence xong | Tag `phase-3` mới có ở local, **chưa push remote**. |
-| CP4 | Chưa bắt đầu | Chưa có bench/soak/leaderboard/Release `v1.0.0`. |
-| CP5 | Chưa bắt đầu | Chưa có retro, video demo và nộp bài. |
+| CP4 | Đã xong phần chạy được | Contract `1.3`; `bench.json`, `soak.json`, leaderboard, web zip, tag `phase-4`/Release `v1.0.0`; xem `docs/proof/phase-4/`. |
+| CP5 | Đang hoàn tất | Video `docs/demo/demo.mp4`, spec/giả định/retro/AI log đã có; còn xác nhận link nộp LMS. |
 
 Đã kiểm tra ngày 2026-11-21: `origin` là `https://github.com/CTNone/K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long.git`; GitHub API trả về `visibility=public`; `git ls-remote --tags origin` chỉ thấy `phase-1`.
 

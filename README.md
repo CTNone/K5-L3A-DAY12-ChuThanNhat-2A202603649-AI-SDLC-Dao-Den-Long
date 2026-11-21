@@ -1,6 +1,21 @@
 # Day 12 — AI SDLC: Đảo Đèn Lồng
 
-## Bản game Phase 3
+## Demo v1.0.0
+
+- Video: [docs/demo/demo.mp4](docs/demo/demo.mp4)
+- Web build: tải `dao-den-long-web.zip` trong Release `v1.0.0`, giải nén rồi chạy
+  `python tools/serve_web.py`, hoặc `python game.py --no-browser` nếu đã có `build/web`.
+- Contract: `1.3`; headless, benchmark và soak đều chạy bằng Python chuẩn.
+
+```bash
+python3 tools/sync_shared.py --check
+python3 tools/verify_phase1.py && python3 tools/verify_phase2.py && python3 tools/verify_phase3.py
+python3 game.py --bench --bench-out bench.json
+python3 game.py --soak --soak-out soak.json
+python3 game.py
+```
+
+## Bản game Phase 4
 
 Game dùng Python 3.10+ cho phần mô phỏng/headless và **Godot 4.7.2** cho GUI 3D thật. Trên Windows chạy bằng `python`; trên Linux/macOS dùng `python3`. Không cần Tkinter.
 
@@ -93,6 +108,22 @@ Mỗi phase là một vòng nhỏ. Công cụ, thứ tự, định dạng tài l
 - **Game tốt là game đúng yêu cầu của khách hàng**, không phải game phức tạp hay đẹp nhất. Làm đúng và chứng minh được là đúng trước, trau chuốt sau.
 - **Cân nhắc kỹ quota token của bạn.** Đốt nhiều token không làm bài tốt hơn. Ngữ cảnh gọn, kế hoạch rõ, kiểm chứng sớm thường vừa rẻ vừa đúng hơn chạy agent liên tục.
 - **Kiểm chứng là phần quan trọng nhất.** Bằng chứng (test, output headless, ảnh, số đo) đáng giá hơn lời mô tả.
+
+---
+
+## Phase 4 / v1.0.0
+
+- **Leaderboard**: lưu top 10 theo tên 3–12 ký tự, điểm rồi thời điểm; nhập tên sau khi
+  thua hoặc thắng Đêm 3; admin không ghi điểm. CLI: `python3 game.py --export-leaderboard out.json`.
+- **Benchmark/soak**: `bench.json` là 60 giây mô phỏng headless (200 shade, 100 mote);
+  `soak.json` là 10 đêm trong một tiến trình, không input. Không có số đo GPU 3D.
+- **Accessibility**: chữ tối thiểu 18 px, cỡ 125%, giảm chuyển động, đổi phím qua
+  InputMap có phát hiện trùng phím, hướng nhân vật theo camera hoặc hướng di chuyển.
+- **Audio**: audio chỉ phát sau thao tác người dùng (`audio.unlock()`), phù hợp chính
+  sách autoplay của trình duyệt.
+- **Admin**: checkbox luôn hiện; `Ctrl+Shift+1..6` bật/tắt cheat dev. Không phải bảo mật.
+- Ghi chú: [spec](docs/notes/phase-4-spec.md), [giả định](docs/notes/phase-4-assumptions.md),
+  [retro](docs/notes/phase-4-retro.md), [nhật ký AI](docs/notes/ai-usage-log.md).
 
 ---
 

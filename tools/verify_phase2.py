@@ -47,9 +47,9 @@ def empty():
 def main():
     passed = []
     contract = json.loads((ROOT / "game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"] == "1.2"
+    assert contract["contract_version"] in ("1.2", "1.3")
     assert contract["tuning"] == T
-    passed.append("contract v1.2 matches simulation constants")
+    passed.append("contract v1.2/v1.3 matches simulation constants")
 
     maps = {}
     for night in (1, 2, 3):

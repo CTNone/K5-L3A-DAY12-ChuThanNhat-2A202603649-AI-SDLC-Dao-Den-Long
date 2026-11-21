@@ -1,0 +1,20 @@
+{
+  "bench_version": 1,
+  "seed": 1,
+  "mode": "headless-simulation",
+  "renderer": "headless-simulation",
+  "os": "Windows 10",
+  "vsync": false,
+  "warmup_s": 3.0,
+  "duration_s": 60.0,
+  "frames": 3600,
+  "avg_fps": 2235.82,
+  "p1_low_fps": 44.29,
+  "frame_ms_p95": 0.009,
+  "load_ms": 10.593,
+  "peak_mem_mb": 20.25,
+  "shade_count": 200,
+  "mote_count": 100,
+  "lantern_count": 5,
+  "captured_at": "2026-11-21T04:57:39Z"
+}

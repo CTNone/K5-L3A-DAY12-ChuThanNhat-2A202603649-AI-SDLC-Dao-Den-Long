@@ -17,7 +17,11 @@ func _ready() -> void:
 	music_player.stream = streams["music"]
 	music_player.volume_db = -20.0
 	add_child(music_player)
-	music_player.play()
+
+
+func unlock() -> void:
+	if music_player != null and not music_player.playing:
+		music_player.play()
 
 
 func _ensure_bus(bus_name: String, send: String) -> void:

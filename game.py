@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 """Đảo Đèn Lồng — deterministic 60 Hz simulation and contract runner."""
 import argparse
+import ctypes
 import json
 import math
 import os
+import platform
 import random
 import shutil
+import statistics
 import subprocess
 import sys
+import time
+import tracemalloc
+from datetime import datetime, timezone
 from pathlib import Path
+
+import leaderboard
 
 HZ = 60
 ROOT = Path(__file__).resolve().parent
@@ -825,6 +833,141 @@ def headless(args):
         stream.write(json.dumps({"type": "end", "ticks": game.tick, "sim_ticks": game.sim_tick, "state": game.state, "score": game.score}, separators=(",", ":")) + "\n")
 
 
+def rss_mb():
+    try:
+        from ctypes import wintypes
+        class Counters(ctypes.Structure):
+            _fields_ = [("cb", wintypes.DWORD), ("PageFaultCount", wintypes.DWORD),
+                        ("PeakWorkingSetSize", ctypes.c_size_t), ("WorkingSetSize", ctypes.c_size_t),
+                        ("QuotaPeakPagedPoolUsage", ctypes.c_size_t), ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                        ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t), ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                        ("PagefileUsage", ctypes.c_size_t), ("PeakPagefileUsage", ctypes.c_size_t)]
+        counters = Counters()
+        counters.cb = ctypes.sizeof(counters)
+        psapi = ctypes.WinDLL("psapi")
+        fn = psapi.GetProcessMemoryInfo
+        fn.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+        fn.restype = wintypes.BOOL
+        kernel = ctypes.WinDLL("kernel32")
+        handle = kernel.GetCurrentProcess
+        handle.restype = wintypes.HANDLE
+        fn(handle(), ctypes.byref(counters), counters.cb)
+        return round(counters.WorkingSetSize / (1024 * 1024), 2)
+    except Exception:
+        try:
+            import resource
+            return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 2)
+        except Exception:
+            return 0.0
+
+
+def benchmark(args):
+    scenario = {
+        "random_motes": False,
+        "random_shades": False,
+        "motes": [[round((i % 10) * 2.0 - 9.0, 2), 0.0, round((i // 10) * 2.0 - 9.0, 2)] for i in range(100)],
+        "shades": [{"id": f"B{i}", "pos": [round((i % 14) * 3.0 - 20.0, 2), 0.0, round((i // 14) * 3.0 - 20.0, 2)]} for i in range(200)],
+    }
+    tracemalloc.start()
+    load_start = time.perf_counter()
+    game = Game(args.seed, scenario, 1)
+    load_ms = round((time.perf_counter() - load_start) * 1000, 3)
+    warmup_ticks = int(args.warmup_s * HZ)
+    measure_ticks = int(args.bench_seconds * HZ)
+    for _ in range(warmup_ticks):
+        game.step({})
+    durations = []
+    for _ in range(measure_ticks):
+        start = time.perf_counter()
+        game.step({})
+        durations.append((time.perf_counter() - start) * 1000)
+    peak_mb = rss_mb()
+    tracemalloc.stop()
+    durations.sort()
+    total_s = sum(durations) / 1000
+    p95 = durations[min(len(durations) - 1, int(len(durations) * 0.95))]
+    p1_fps = 1000.0 / durations[min(len(durations) - 1, int(len(durations) * 0.99))]
+    result = {
+        "bench_version": 1,
+        "seed": args.seed,
+        "mode": "headless-simulation",
+        "renderer": "headless-simulation",
+        "os": f"{platform.system()} {platform.release()}",
+        "vsync": False,
+        "warmup_s": args.warmup_s,
+        "duration_s": args.bench_seconds,
+        "frames": len(durations),
+        "avg_fps": round(len(durations) / total_s, 2),
+        "p1_low_fps": round(p1_fps, 2),
+        "frame_ms_p95": round(p95, 3),
+        "load_ms": load_ms,
+        "peak_mem_mb": peak_mb,
+        "shade_count": 200,
+        "mote_count": 100,
+        "lantern_count": len(game.lanterns),
+        "captured_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+    }
+    out = Path(args.bench_out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
+def soak(args):
+    sequence = [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
+    started = datetime.now(timezone.utc)
+    start_time = time.perf_counter()
+    start_rss = rss_mb()
+    nights = []
+    crashes = []
+    for index, night in enumerate(sequence, 1):
+        try:
+            game = Game(args.seed, None, night)
+            limit = int(float(game.map.get("duration_s", T[f"night{night}_duration_s"])) * HZ)
+            for _ in range(limit):
+                game.step({})
+                if game.state != "playing":
+                    break
+            nights.append({
+                "index": index,
+                "night": night,
+                "result": game.state,
+                "reason": game.result,
+                "score": game.score,
+                "ticks": game.tick,
+                "lit_lanterns": game.lit_count,
+            })
+        except Exception as exc:
+            crashes.append({"index": index, "night": night, "error": f"{type(exc).__name__}: {exc}"})
+            nights.append({"index": index, "night": night, "result": "crashed", "reason": str(exc), "score": 0, "ticks": 0, "lit_lanterns": 0})
+    result = {
+        "soak_version": 1,
+        "seed": args.seed,
+        "sequence": sequence,
+        "input": "none",
+        "processes": 1,
+        "crashes": crashes,
+        "nights": nights,
+        "rss_start_mb": start_rss,
+        "rss_end_mb": rss_mb(),
+        "elapsed_s": round(time.perf_counter() - start_time, 3),
+        "started_at": started.isoformat(timespec="seconds").replace("+00:00", "Z"),
+        "finished_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+    }
+    out = Path(args.soak_out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
+def export_leaderboard(args):
+    ordered = leaderboard.export(args.export_leaderboard, args.leaderboard_file)
+    print(json.dumps(ordered, ensure_ascii=False, indent=2))
+    return 0
+
+
 def find_godot():
     candidates = [Path("C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe"), Path("C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe")]
     for candidate in candidates:
@@ -893,14 +1036,30 @@ def main():
     parser.add_argument("--no-browser", action="store_true")
     parser.add_argument("--build", action="store_true")
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--bench", action="store_true")
+    parser.add_argument("--bench-out", default="bench.json")
+    parser.add_argument("--bench-seconds", type=float, default=60.0)
+    parser.add_argument("--warmup-s", type=float, default=3.0)
+    parser.add_argument("--soak", action="store_true")
+    parser.add_argument("--soak-out", default="soak.json")
+    parser.add_argument("--export-leaderboard", metavar="PATH")
+    parser.add_argument("--leaderboard-file", default="leaderboard.json")
     args = parser.parse_args()
     try:
         if args.night not in (1, 2, 3):
             raise ValueError("night must be 1, 2 or 3")
         if args.ticks < 0 or args.snapshot_every <= 0:
             raise ValueError("ticks must be >= 0 and snapshot-every must be > 0")
+        if args.bench_seconds <= 0 or args.warmup_s < 0:
+            raise ValueError("bench seconds must be > 0 and warmup must be >= 0")
+        if args.export_leaderboard:
+            return export_leaderboard(args)
         if args.check:
             return check_web()
+        if args.bench:
+            return benchmark(args)
+        if args.soak:
+            return soak(args)
         if args.headless:
             headless(args)
         else:

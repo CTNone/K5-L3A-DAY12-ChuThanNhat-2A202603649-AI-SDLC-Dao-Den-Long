@@ -1,0 +1,119 @@
+Phase 1 core checks passed:
+- headless simulation does not import Tkinter
+- contract v1.2/v1.3 tuning matches simulation constants
+- pickup 10 motes and light a new lantern
+- pulse cost, stun and score
+- shade collision, health and dropped motes
+- island edge fall damage
+- loss at zero flames
+- dawn below 60% lanterns is a loss
+- dawn with 60% lanterns wins and scores dawn bonus
+- same-seed deterministic JSONL output
+- invalid input and scenario exit with code 2
+
+Phase 2 core checks passed:
+- contract v1.2/v1.3 matches simulation constants
+- three maps contain required geometry and entities
+- --night 1|2|3 runs
+- invalid night exits 2
+- pause increments tick but not sim_tick and freezes time
+- dash moves faster than walking
+- glide limits falling speed
+- lost wisp pushes the player
+- wind charm grants immunity and blocks wisp push
+- strong wind pushes unless a charm is active
+- fall loses a flame and respawns safely
+- all lanterns lit does not win before dawn
+- Night 3 wins at dawn without requiring the bell tower
+- Night 3 dawn threshold is ceil(60% of 7) = 5
+- Night 3 output is deterministic
+- 21,600 Night 3 ticks finish in 0.87s
+- godot/shared is in sync with contract and maps
+
+Phase 3 core checks passed:
+- contract v1.2 tuning, score and ui are in sync
+- snapshot exposes fuel, ever_lit, capacity and dawn fields
+- refuel uses the nearest receiving lantern
+- refuel tie-break uses the smaller lantern id
+- refuel only spends ceil(missing fuel / 10) motes
+- full lantern rejects refuel without an event or score
+- ambient drain depletes exactly at 60 ticks and emits lantern_out
+- shade drain is 5/s and stops after the lantern goes out
+- shade drain removes one fuel per 10 ticks below fuel 30
+- shade chases the player from 10 m
+- relight costs 5 motes, scores 50 and increments relit_count
+- new light costs 10 motes, scores 100 and raises capacity to 12
+- capacity is min(20, 10 + 2*lights) and resets each night
+- refuel crossing fuel 30 pushes nearby shades
+- refuel below fuel 30 does not push shades
+- dawn win needs ceil(60%) and scores 500 + flames*50
+- dawn below threshold is a loss
+- no_flames takes precedence over the dawn result
+- scoring has no time bonus and pays per surviving flame
+- colorblind mode is persisted/echoed and validated
+- fuel/drain simulation is deterministic
+- 21,600 Night 3 fuel ticks finish in 0.66s
+- godot/shared is in sync with contract and maps
+
+Phase 1 core checks passed:
+- headless simulation does not import Tkinter
+- contract v1.2/v1.3 tuning matches simulation constants
+- pickup 10 motes and light a new lantern
+- pulse cost, stun and score
+- shade collision, health and dropped motes
+- island edge fall damage
+- loss at zero flames
+- dawn below 60% lanterns is a loss
+- dawn with 60% lanterns wins and scores dawn bonus
+- same-seed deterministic JSONL output
+- invalid input and scenario exit with code 2
+
+Phase 2 core checks passed:
+- contract v1.2/v1.3 matches simulation constants
+- three maps contain required geometry and entities
+- --night 1|2|3 runs
+- invalid night exits 2
+- pause increments tick but not sim_tick and freezes time
+- dash moves faster than walking
+- glide limits falling speed
+- lost wisp pushes the player
+- wind charm grants immunity and blocks wisp push
+- strong wind pushes unless a charm is active
+- fall loses a flame and respawns safely
+- all lanterns lit does not win before dawn
+- Night 3 wins at dawn without requiring the bell tower
+- Night 3 dawn threshold is ceil(60% of 7) = 5
+- Night 3 output is deterministic
+- 21,600 Night 3 ticks finish in 0.61s
+- godot/shared is in sync with contract and maps
+
+Phase 3 core checks passed:
+- contract v1.2 tuning, score and ui are in sync
+- snapshot exposes fuel, ever_lit, capacity and dawn fields
+- refuel uses the nearest receiving lantern
+- refuel tie-break uses the smaller lantern id
+- refuel only spends ceil(missing fuel / 10) motes
+- full lantern rejects refuel without an event or score
+- ambient drain depletes exactly at 60 ticks and emits lantern_out
+- shade drain is 5/s and stops after the lantern goes out
+- shade drain removes one fuel per 10 ticks below fuel 30
+- shade chases the player from 10 m
+- relight costs 5 motes, scores 50 and increments relit_count
+- new light costs 10 motes, scores 100 and raises capacity to 12
+- capacity is min(20, 10 + 2*lights) and resets each night
+- refuel crossing fuel 30 pushes nearby shades
+- refuel below fuel 30 does not push shades
+- dawn win needs ceil(60%) and scores 500 + flames*50
+- dawn below threshold is a loss
+- no_flames takes precedence over the dawn result
+- scoring has no time bonus and pays per surviving flame
+- colorblind mode is persisted/echoed and validated
+- fuel/drain simulation is deterministic
+- 21,600 Night 3 fuel ticks finish in 0.68s
+- godot/shared is in sync with contract and maps
+
+Phase 4 release checks passed:
+- contract 1.3, bench/soak/leaderboard commands
+- leaderboard sort, tie-break and export
+- bench.json and soak.json are real captured output
+- LICENSE, credits, Dockerfile, Phase 4 notes and demo video

@@ -51,7 +51,7 @@ def empty():
 def main():
     passed = []
     contract = json.loads((ROOT / "game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"] == "1.2"
+    assert contract["contract_version"] in ("1.2", "1.3")
     assert contract["tuning"] == T
     for key in ("capacity_per_light", "capacity_max", "new_light_cost", "relight_cost",
                 "lantern_fuel_max", "refuel_fuel_per_mote", "ambient_drain_per_s",
@@ -64,7 +64,7 @@ def main():
                               "default_color_mode": "default",
                               "fuel_warning_blink_hz": 1.0}
     shared = json.loads((ROOT / "godot" / "shared" / "tuning.json").read_text(encoding="utf-8"))
-    assert shared["contract_version"] == "1.2" and shared["tuning"] == T and shared["ui"] == contract["ui"]
+    assert shared["contract_version"] in ("1.2", "1.3") and shared["tuning"] == T and shared["ui"] == contract["ui"]
     passed.append("contract v1.2 tuning, score and ui are in sync")
 
     with tempfile.TemporaryDirectory() as tmp:

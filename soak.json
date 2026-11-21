@@ -1,0 +1,116 @@
+{
+  "soak_version": 1,
+  "seed": 1,
+  "sequence": [
+    1,
+    2,
+    3,
+    1,
+    2,
+    3,
+    1,
+    2,
+    3,
+    1
+  ],
+  "input": "none",
+  "processes": 1,
+  "crashes": [],
+  "nights": [
+    {
+      "index": 1,
+      "night": 1,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 18000,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 2,
+      "night": 2,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 21600,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 3,
+      "night": 3,
+      "result": "lost",
+      "reason": "no_flames",
+      "score": 0,
+      "ticks": 279,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 4,
+      "night": 1,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 18000,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 5,
+      "night": 2,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 21600,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 6,
+      "night": 3,
+      "result": "lost",
+      "reason": "no_flames",
+      "score": 0,
+      "ticks": 279,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 7,
+      "night": 1,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 18000,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 8,
+      "night": 2,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 21600,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 9,
+      "night": 3,
+      "result": "lost",
+      "reason": "no_flames",
+      "score": 0,
+      "ticks": 279,
+      "lit_lanterns": 0
+    },
+    {
+      "index": 10,
+      "night": 1,
+      "result": "lost",
+      "reason": "not_enough_lanterns",
+      "score": 0,
+      "ticks": 18000,
+      "lit_lanterns": 0
+    }
+  ],
+  "rss_start_mb": 19.35,
+  "rss_end_mb": 19.47,
+  "elapsed_s": 3.693,
+  "started_at": "2026-11-21T04:57:39Z",
+  "finished_at": "2026-11-21T04:57:43Z"
+}
