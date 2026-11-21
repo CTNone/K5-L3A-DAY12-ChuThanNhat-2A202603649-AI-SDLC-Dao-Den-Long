@@ -1,9 +1,10 @@
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY . /app
-EXPOSE 8000
+ARG WEB_ZIP=dist/dao-den-long-web-v1.0.1.zip
+COPY tools/serve_web.py /app/serve_web.py
+COPY ${WEB_ZIP} /tmp/web.zip
+RUN python -c "import zipfile; zipfile.ZipFile('/tmp/web.zip').extractall('/app/build/web')" && rm /tmp/web.zip
 
-# The static build must exist at build/web. Run `python tools/build_web.py` first
-# or extract the release web zip there.
-CMD ["python3", "game.py", "--no-browser", "--port", "8000"]
+EXPOSE 8000
+CMD ["python", "serve_web.py", "--dir", "build/web", "--host", "0.0.0.0", "--port", "8000", "--no-browser"]

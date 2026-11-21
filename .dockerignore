@@ -1,0 +1,9 @@
+.git
+.agents
+build
+docs
+godot
+shared
+__pycache__
+*.py[cod]
+*.jsonl

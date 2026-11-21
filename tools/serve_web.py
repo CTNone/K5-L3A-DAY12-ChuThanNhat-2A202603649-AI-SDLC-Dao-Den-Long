@@ -12,6 +12,15 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "build" / "web"
 
 
+def default_directory():
+    if (BUILD / "index.html").exists():
+        return BUILD
+    here = Path(__file__).resolve().parent
+    if (here / "index.html").exists():
+        return here
+    return BUILD
+
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     extensions_map = {
         **http.server.SimpleHTTPRequestHandler.extensions_map,
@@ -39,12 +48,12 @@ def main():
     parser.add_argument("--port", type=int, default=8060)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--no-browser", action="store_true")
-    parser.add_argument("--dir", default=str(BUILD))
+    parser.add_argument("--dir", default=None)
     args = parser.parse_args()
-    directory = Path(args.dir).resolve()
+    directory = Path(args.dir).resolve() if args.dir else default_directory()
     index = directory / "index.html"
     if not index.exists():
-        print(f"Missing {index}; run python tools/build_web.py first.", file=sys.stderr)
+        print(f"Missing {index}; run python tools/build_web.py first or pass --dir.", file=sys.stderr)
         return 1
     mimetypes.add_type("application/wasm", ".wasm")
     handler = functools.partial(Handler, directory=str(directory))
