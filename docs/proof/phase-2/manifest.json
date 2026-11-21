@@ -1,6 +1,6 @@
 {
   "phase": 2,
-  "generated_at": "2026-11-20T16:39:55.967435+00:00",
+  "generated_at": "2026-11-21T02:01:54.825769+00:00",
   "contract_version": "1.1",
   "seed": 7,
   "ticks": 600,
@@ -105,13 +105,13 @@
     },
     {
       "path": "docs/proof/phase-2/menu-1280x720.png",
-      "bytes": 167318,
-      "sha256": "1417198fd94b8be83a20661821fb6d082dd9c76a5e46ea52c46722644bce777b"
+      "bytes": 167470,
+      "sha256": "4ee72763a9f730097d38873ce910ea9c849b9746e42a5f1a1e7f927883064a27"
     },
     {
       "path": "docs/proof/phase-2/night1-1280x720.png",
-      "bytes": 187453,
-      "sha256": "15384f0a8d858f1138ed4aacbad2e12bbfdf84b4bfd5d17f8e4282d389be74a2"
+      "bytes": 187372,
+      "sha256": "f0eef42ef90b1c9fe3831055748c1ad0a9cb287c7b6ab9dd8590894fbc4b2505"
     },
     {
       "path": "docs/proof/phase-2/night1-headless.jsonl",
@@ -135,8 +135,8 @@
     },
     {
       "path": "docs/proof/phase-2/night3-1280x720.png",
-      "bytes": 215606,
-      "sha256": "58eb0be68450d68e18226a231d9cce7ca03576a124aad7b59d608f4df8819c11"
+      "bytes": 212457,
+      "sha256": "02734e522df332d40d7f06a3fed5024b7358752609638128e58355d104f5121d"
     },
     {
       "path": "docs/proof/phase-2/night3-determinism-1.jsonl",
@@ -170,8 +170,8 @@
     },
     {
       "path": "docs/proof/phase-2/README.md",
-      "bytes": 1991,
-      "sha256": "c20d0e20e35f87cd89d8a16b7d7042c0bf414d19e9266d68587944ff0de0fafa"
+      "bytes": 2120,
+      "sha256": "6fcff0cf2336b654bf2900d08b0bee882ca53fc0978f8d3ca8f85bc47959616b"
     },
     {
       "path": "docs/proof/phase-2/sync-check.log",
@@ -186,7 +186,7 @@
     {
       "path": "docs/proof/phase-2/verify-phase2.log",
       "bytes": 641,
-      "sha256": "f5b1dbfd096abdd565152ad12d6b153ed8052b91e6311ddd71879c6da01cb13c"
+      "sha256": "a470dab4849b871cad77b3f94cce07baef438e87d6fe8e959d1272171e53005b"
     },
     {
       "path": "docs/proof/phase-2/web-check.log",
@@ -207,7 +207,12 @@
       "path": "docs/proof/phase-2/web-night1.png",
       "bytes": 151211,
       "sha256": "30dcfed8f77837a8606652feb8bc7d6da27a2ce941bd90915b3d2e015fd2a939"
+    },
+    {
+      "path": "docs/proof/phase-2/wsl-verify.log",
+      "bytes": 1026,
+      "sha256": "bc9a2f5d0e322f3e3c79aaaacf79785674648353dc8f3dae0f621030a59772a3"
     }
   ],
-  "git_head": "006d425d4f70452c4c3d609e38bf6d2a97eeb885"
+  "git_head": "0862e6b68ee68c64320b4704c451b4919b45dd64"
 }

@@ -18,6 +18,8 @@ python game.py
 - `verify-phase1.log`: 11/11 Phase 1 checks pass.
 - `verify-phase2.log`: 15 Phase 2 checks pass, including determinism and 21,600 Night 3
   ticks in 0.54 s.
+- `wsl-verify.log`: the same Phase 1/2 checks pass under WSL Ubuntu with Python 3.14.4;
+  21,600 Night 3 ticks finish in 1.48 s.
 - `night3-determinism-1.jsonl` and `night3-determinism-2.jsonl`: identical SHA-256.
 - `build-web.log`: Godot Web export succeeds (`index.html`, `index.js`, `index.pck`,
   `index.wasm`).
