@@ -1,0 +1,8 @@
+﻿Benchmark host
+Captured: 2026-11-21T12:51:24+07:00
+OS: Microsoft Windows 10 Pro
+CPU: Intel(R) Core(TM) i7-4700MQ CPU @ 2.40GHz
+GPU: Intel(R) HD Graphics 4600
+RAM_MB: 28577
+Python: Python 3.11.9
+Renderer: headless-simulation (no GPU rendering in this measurement)

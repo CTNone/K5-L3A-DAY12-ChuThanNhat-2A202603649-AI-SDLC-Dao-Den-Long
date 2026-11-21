@@ -1,0 +1,128 @@
+﻿Clean-clone verification
+Date: 2026-11-21T12:47:44+07:00
+Remote: https://github.com/CTNone/K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long.git
+Host: Microsoft Windows NT 10.0.19045.0
+Python: Python 3.11.9
+
+PS> git clone https://github.com/CTNone/K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long.git clone-check
+
+[exit 0]
+
+PS> git rev-parse HEAD
+4fd9641d75deda5e5bd10f057b156a2c83d86b26
+[exit 0]
+
+PS> git tag --list
+phase-1
+phase-2
+phase-3
+phase-4
+v1.0.0
+[exit 0]
+
+PS> python tools/sync_shared.py --check
+shared data is in sync
+[exit 0]
+
+PS> python tools/verify_phase1.py
+Phase 1 core checks passed:
+- headless simulation does not import Tkinter
+- contract v1.2/v1.3 tuning matches simulation constants
+- pickup 10 motes and light a new lantern
+- pulse cost, stun and score
+- shade collision, health and dropped motes
+- island edge fall damage
+- loss at zero flames
+- dawn below 60% lanterns is a loss
+- dawn with 60% lanterns wins and scores dawn bonus
+- same-seed deterministic JSONL output
+- invalid input and scenario exit with code 2
+[exit 0]
+
+PS> python tools/verify_phase2.py
+Phase 2 core checks passed:
+- contract v1.2/v1.3 matches simulation constants
+- three maps contain required geometry and entities
+- --night 1|2|3 runs
+- invalid night exits 2
+- pause increments tick but not sim_tick and freezes time
+- dash moves faster than walking
+- glide limits falling speed
+- lost wisp pushes the player
+- wind charm grants immunity and blocks wisp push
+- strong wind pushes unless a charm is active
+- fall loses a flame and respawns safely
+- all lanterns lit does not win before dawn
+- Night 3 wins at dawn without requiring the bell tower
+- Night 3 dawn threshold is ceil(60% of 7) = 5
+- Night 3 output is deterministic
+- 21,600 Night 3 ticks finish in 0.61s
+- godot/shared is in sync with contract and maps
+[exit 0]
+
+PS> python tools/verify_phase3.py
+Phase 3 core checks passed:
+- contract v1.2 tuning, score and ui are in sync
+- snapshot exposes fuel, ever_lit, capacity and dawn fields
+- refuel uses the nearest receiving lantern
+- refuel tie-break uses the smaller lantern id
+- refuel only spends ceil(missing fuel / 10) motes
+- full lantern rejects refuel without an event or score
+- ambient drain depletes exactly at 60 ticks and emits lantern_out
+- shade drain is 5/s and stops after the lantern goes out
+- shade drain removes one fuel per 10 ticks below fuel 30
+- shade chases the player from 10 m
+- relight costs 5 motes, scores 50 and increments relit_count
+- new light costs 10 motes, scores 100 and raises capacity to 12
+- capacity is min(20, 10 + 2*lights) and resets each night
+- refuel crossing fuel 30 pushes nearby shades
+- refuel below fuel 30 does not push shades
+- dawn win needs ceil(60%) and scores 500 + flames*50
+- dawn below threshold is a loss
+- no_flames takes precedence over the dawn result
+- scoring has no time bonus and pays per surviving flame
+- colorblind mode is persisted/echoed and validated
+- fuel/drain simulation is deterministic
+- 21,600 Night 3 fuel ticks finish in 0.64s
+- godot/shared is in sync with contract and maps
+[exit 0]
+
+PS> python tools/verify_phase4.py
+Phase 4 release checks passed:
+- contract 1.3, bench/soak/leaderboard commands
+- leaderboard sort, tie-break and export
+- bench.json and soak.json are real captured output
+- LICENSE, credits, Dockerfile, Phase 4 notes and demo video
+[exit 0]
+
+PS> python game.py --headless --seed 7 --night 1 --ticks 600 --out out.jsonl
+[exit 0]
+
+PS> python game.py --check
+contract: C:\Users\CTN_Number_ONE\AppData\Local\Temp\opencode\clone-check\game.contract.json
+godot: C:\Tools\Godot\Godot_v4.7.2-stable_win64_console.exe
+templates: C:\Users\CTN_Number_ONE\AppData\Roaming\Godot\export_templates\4.7.2.stable
+build: missing
+[exit 2]
+
+Note: the GUI needs Godot 4.7.2 and web export templates. This clone has no build/web, so the
+server path is expected to fail with a clear message. The standalone release zip covers that case.
+PS> python game.py --no-browser --port 8099
+python : Web build missing. Install Godot 4.7.2 export templates, then run:
+At line:1 char:1
++ python game.py --no-browser --port 8099 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Web build missi...ates, then run::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  python tools/build_web.py
+Godot: C:\Tools\Godot\Godot_v4.7.2-stable_win64_console.exe; templates: 
+C:\Users\CTN_Number_ONE\AppData\Roaming\Godot\export_templates\4.7.2.stable
+[exit 2]
+
+PS> git log --oneline -- .agents
+9969623 chore: keep agent skills harness in repo history
+[exit 0]
+
+Tracked skill files: 242
+

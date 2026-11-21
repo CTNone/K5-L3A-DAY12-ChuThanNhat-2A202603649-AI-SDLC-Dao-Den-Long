@@ -861,6 +861,47 @@ def rss_mb():
             return 0.0
 
 
+def hardware_info():
+    cpu = platform.processor() or os.environ.get("PROCESSOR_IDENTIFIER", "")
+    gpu = ""
+    try:
+        if sys.platform == "win32":
+            out = subprocess.run(
+                ["powershell", "-NoProfile", "-Command",
+                 "(Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name)"],
+                capture_output=True, text=True, timeout=15)
+            gpu = out.stdout.strip()
+        elif sys.platform == "darwin":
+            out = subprocess.run(["system_profiler", "SPDisplaysDataType"], capture_output=True, text=True, timeout=15)
+            for line in out.stdout.splitlines():
+                if "Chipset Model" in line:
+                    gpu = line.split(":", 1)[1].strip()
+                    break
+        else:
+            out = subprocess.run(["sh", "-c", "lspci | grep -i vga"], capture_output=True, text=True, timeout=15)
+            gpu = out.stdout.strip()
+    except Exception:
+        gpu = ""
+    ram_mb = 0
+    try:
+        if sys.platform == "win32":
+            class MemoryStatus(ctypes.Structure):
+                _fields_ = [("dwLength", ctypes.c_ulong), ("dwMemoryLoad", ctypes.c_ulong),
+                            ("ullTotalPhys", ctypes.c_ulonglong), ("ullAvailPhys", ctypes.c_ulonglong),
+                            ("ullTotalPageFile", ctypes.c_ulonglong), ("ullAvailPageFile", ctypes.c_ulonglong),
+                            ("ullTotalVirtual", ctypes.c_ulonglong), ("ullAvailVirtual", ctypes.c_ulonglong),
+                            ("ullAvailExtendedVirtual", ctypes.c_ulonglong)]
+            status = MemoryStatus()
+            status.dwLength = ctypes.sizeof(status)
+            ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
+            ram_mb = int(status.ullTotalPhys // (1024 * 1024))
+        else:
+            ram_mb = int(os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") // (1024 * 1024))
+    except Exception:
+        ram_mb = 0
+    return {"cpu": cpu, "gpu": gpu, "ram_mb": ram_mb}
+
+
 def benchmark(args):
     scenario = {
         "random_motes": False,
@@ -887,12 +928,18 @@ def benchmark(args):
     total_s = sum(durations) / 1000
     p95 = durations[min(len(durations) - 1, int(len(durations) * 0.95))]
     p1_fps = 1000.0 / durations[min(len(durations) - 1, int(len(durations) * 0.99))]
+    hardware = hardware_info()
     result = {
         "bench_version": 1,
         "seed": args.seed,
         "mode": "headless-simulation",
         "renderer": "headless-simulation",
         "os": f"{platform.system()} {platform.release()}",
+        "cpu": hardware["cpu"],
+        "gpu": hardware["gpu"],
+        "ram_mb": hardware["ram_mb"],
+        "resolution": None,
+        "python": platform.python_version(),
         "vsync": False,
         "warmup_s": args.warmup_s,
         "duration_s": args.bench_seconds,
