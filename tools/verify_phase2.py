@@ -47,9 +47,9 @@ def empty():
 def main():
     passed = []
     contract = json.loads((ROOT / "game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"] == "1.1"
+    assert contract["contract_version"] == "1.2"
     assert contract["tuning"] == T
-    passed.append("contract v1.1 matches simulation constants")
+    passed.append("contract v1.2 matches simulation constants")
 
     maps = {}
     for night in (1, 2, 3):
@@ -117,14 +117,29 @@ def main():
         assert snap(rows, 60)["player"]["flames"] == 2
         passed.append("fall loses a flame and respawns safely")
 
+        # Phase 3 replaces the old early win and bell-tower rule: all lanterns
+        # lit is not enough before dawn, and the dawn check only needs 60%.
         lit = {"lanterns": [{"id": f"L{i}", "lit": True} for i in range(1, 8)]}
-        win_sc = empty() | lit | {"player": {"pos": [0, 8, 0], "flames": 2}, "time_left_s": 100}
+        early_sc = empty() | lit | {"player": {"pos": [0, 0, 28], "flames": 2}, "time_left_s": 100}
+        proc, rows = run(tmp, "night3-early", 3, early_sc, None, 1)
+        assert proc.returncode == 0 and snap(rows, 1)["state"] == "playing"
+        passed.append("all lanterns lit does not win before dawn")
+
+        win_sc = empty() | lit | {"player": {"pos": [0, 0, 28], "flames": 2}, "time_left_s": 0.01}
         proc, rows = run(tmp, "night3-win", 3, win_sc, None, 1)
         assert proc.returncode == 0 and snap(rows, 1)["state"] == "won"
-        away_sc = empty() | lit | {"player": {"pos": [0, 0, 28], "flames": 2}, "time_left_s": 100}
-        proc, rows = run(tmp, "night3-away", 3, away_sc, None, 1)
-        assert proc.returncode == 0 and snap(rows, 1)["state"] == "playing"
-        passed.append("Night 3 requires the bell tower for the win")
+        passed.append("Night 3 wins at dawn without requiring the bell tower")
+
+        five = {"lanterns": [{"id": f"L{i}", "lit": True} for i in range(1, 6)]}
+        dawn_sc = empty() | five | {"player": {"pos": [0, 0, 28], "flames": 2}, "time_left_s": 0.01}
+        proc, rows = run(tmp, "night3-threshold", 3, dawn_sc, None, 1)
+        assert proc.returncode == 0 and snap(rows, 1)["state"] == "won"
+        four = {"lanterns": [{"id": f"L{i}", "lit": True} for i in range(1, 5)]}
+        below_sc = empty() | four | {"player": {"pos": [0, 0, 28], "flames": 2}, "time_left_s": 0.01}
+        proc, rows = run(tmp, "night3-below", 3, below_sc, None, 1)
+        assert proc.returncode == 0 and snap(rows, 1)["state"] == "lost"
+        assert any(r.get("name") == "game_over" and r["data"]["reason"] == "not_enough_lanterns" for r in rows)
+        passed.append("Night 3 dawn threshold is ceil(60% of 7) = 5")
 
         a_proc, _ = run(tmp, "det-a", 3, empty(), None, 60, seed=909, snapshot_every=10)
         b_proc, _ = run(tmp, "det-b", 3, empty(), None, 60, seed=909, snapshot_every=10)

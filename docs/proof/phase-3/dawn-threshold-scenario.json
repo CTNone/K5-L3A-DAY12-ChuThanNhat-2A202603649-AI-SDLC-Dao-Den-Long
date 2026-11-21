@@ -1,0 +1,28 @@
+{
+  "random_motes": false,
+  "random_shades": false,
+  "random_wisps": false,
+  "random_charms": false,
+  "motes": [],
+  "wisps": [],
+  "charms": [],
+  "player": {
+    "flames": 2
+  },
+  "time_left_s": 0.01,
+  "lanterns": [
+    {
+      "id": "L1",
+      "lit": true
+    },
+    {
+      "id": "L2",
+      "lit": true
+    },
+    {
+      "id": "L3",
+      "lit": true
+    }
+  ],
+  "shades": []
+}

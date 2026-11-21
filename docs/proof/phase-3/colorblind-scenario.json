@@ -1,0 +1,11 @@
+{
+  "random_motes": false,
+  "random_shades": false,
+  "random_wisps": false,
+  "random_charms": false,
+  "motes": [],
+  "wisps": [],
+  "charms": [],
+  "color_mode": "colorblind",
+  "shades": []
+}

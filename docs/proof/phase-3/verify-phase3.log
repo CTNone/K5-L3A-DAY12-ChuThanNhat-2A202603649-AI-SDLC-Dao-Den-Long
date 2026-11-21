@@ -1,0 +1,23 @@
+Phase 3 core checks passed:
+- contract v1.2 tuning, score and ui are in sync
+- snapshot exposes fuel, ever_lit, capacity and dawn fields
+- refuel uses the nearest receiving lantern
+- refuel tie-break uses the smaller lantern id
+- refuel only spends ceil(missing fuel / 10) motes
+- full lantern rejects refuel without an event or score
+- ambient drain depletes exactly at 60 ticks and emits lantern_out
+- shade drain is 5/s and stops after the lantern goes out
+- shade drain removes one fuel per 10 ticks below fuel 30
+- relight costs 5 motes, scores 50 and increments relit_count
+- new light costs 10 motes, scores 100 and raises capacity to 12
+- capacity is min(20, 10 + 2*lights) and resets each night
+- refuel crossing fuel 30 pushes nearby shades
+- refuel below fuel 30 does not push shades
+- dawn win needs ceil(60%) and scores 500 + flames*50
+- dawn below threshold is a loss
+- no_flames takes precedence over the dawn result
+- scoring has no time bonus and pays per surviving flame
+- colorblind mode is persisted/echoed and validated
+- fuel/drain simulation is deterministic
+- 21,600 Night 3 fuel ticks finish in 0.55s
+- godot/shared is in sync with contract and maps

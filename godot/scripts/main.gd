@@ -13,7 +13,7 @@ var T: Dictionary = {}
 var map: Dictionary = {}
 var night := 1
 var state := "menu"
-var settings := {"master": 0.8, "music": 0.55, "sfx": 0.8, "sensitivity": 1.0}
+var settings := {"master": 0.8, "music": 0.55, "sfx": 0.8, "sensitivity": 1.0, "color_mode": "default"}
 
 var world_root: Node3D
 var player: Node3D
@@ -50,6 +50,7 @@ var time_left := 300.0
 var sim_time := 0.0
 var won := false
 var end_reason := ""
+var successful_lights := 0
 
 var lanterns: Array = []
 var motes: Array = []
@@ -94,6 +95,10 @@ var hud_timer: Label
 var hud_night: Label
 var hud_score: Label
 var hud_lanterns: Label
+var hud_capacity: Label
+var hud_fuel: ProgressBar
+var hud_fuel_label: Label
+var hud_slots_label: Label
 var hud_wind: Label
 var hud_fps: Label
 var hud_prompt: Label
@@ -105,6 +110,7 @@ var hud_dash: ProgressBar
 var hud_pulse: ProgressBar
 var hud_dash_label: Label
 var hud_pulse_label: Label
+var color_mode_button: OptionButton
 
 
 func _ready() -> void:
@@ -129,7 +135,7 @@ func _ready() -> void:
 
 func _run_capture() -> void:
 	var args := OS.get_cmdline_user_args()
-	var capture_dir := "docs/proof/phase-2"
+	var capture_dir := "docs/proof/phase-3"
 	for i in args.size():
 		if args[i] == "--capture-dir" and i + 1 < args.size():
 			capture_dir = args[i + 1]
@@ -507,6 +513,15 @@ func _build_settings() -> void:
 	music_slider = _add_slider(box, "Nhạc nền", 0.0, 100.0, 1.0, settings["music"] * 100.0, "music")
 	sfx_slider = _add_slider(box, "Hiệu ứng", 0.0, 100.0, 1.0, settings["sfx"] * 100.0, "sfx")
 	sensitivity_slider = _add_slider(box, "Độ nhạy chuột", 50.0, 300.0, 5.0, settings["sensitivity"] * 100.0, "sensitivity")
+	var color_row := _vbox(box, 3)
+	color_row.add_child(_label("Bảng màu", 16, Color(0.82, 0.88, 1.0)))
+	color_mode_button = OptionButton.new()
+	color_mode_button.add_item("Mặc định", 0)
+	color_mode_button.add_item("Dễ phân biệt màu", 1)
+	color_mode_button.selected = 1 if str(settings["color_mode"]) == "colorblind" else 0
+	color_mode_button.custom_minimum_size = Vector2(420.0, 30.0)
+	color_mode_button.item_selected.connect(_on_color_mode_selected)
+	color_row.add_child(color_mode_button)
 	box.add_child(_button("Lưu và quay lại", _close_settings))
 
 
@@ -557,7 +572,7 @@ func _build_controls() -> void:
 	var title := _label("ĐIỀU KHIỂN", 34, Color(1.0, 0.82, 0.42))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(title)
-	var text := _label("WASD — di chuyển theo hướng camera\nChuột — xoay camera\nSpace — nhảy; giữ Space khi rơi để liệng\nShift — lướt nhanh (có hồi chiêu)\nE — nhặt đom đóm / nạp đom đóm vào đèn\nF — xung sáng: đẩy lùi và làm choáng Bóng Tối\nEsc — tạm dừng\n\nĐom đóm: 10 ô chứa. Mỗi đèn cần 5 đom đóm.\nBùa gió giúp miễn nhiễm gió mạnh và đẩy lùi của Bóng Ma Lạc.\nĐêm 3: thắp sáng 7 đèn rồi đứng trong vòng tháp chuông.", 17, Color(0.82, 0.88, 1.0))
+	var text := _label("WASD — di chuyển theo hướng camera\nChuột — xoay camera\nSpace — nhảy; giữ Space khi rơi để liệng\nShift — lướt nhanh (có hồi chiêu)\nE — nhặt đom đóm / nạp dầu / thắp đèn\nF — xung sáng: đẩy lùi và làm choáng Bóng Tối\nEsc — tạm dừng\n\nĐèn mới cần 10 đom đóm; thắp lại cần 5. Mỗi đom nạp 10 dầu.\nGiữ đèn trên 30 dầu để duy trì vùng an toàn.\nBình minh: cần ít nhất 60% số đèn còn sáng.", 17, Color(0.82, 0.88, 1.0))
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	box.add_child(text)
@@ -623,8 +638,8 @@ func _build_hud() -> void:
 	left_panel.anchor_bottom = 0.0
 	left_panel.offset_left = 18.0
 	left_panel.offset_top = 18.0
-	left_panel.offset_right = 340.0
-	left_panel.offset_bottom = 148.0
+	left_panel.offset_right = 360.0
+	left_panel.offset_bottom = 196.0
 	hud_root.add_child(left_panel)
 	var left_margin := _margin(left_panel, 12)
 	var left_box := _vbox(left_margin, 5)
@@ -634,6 +649,12 @@ func _build_hud() -> void:
 	left_box.add_child(hud_timer)
 	hud_night = _label("ĐÊM 1", 15, Color(0.62, 0.75, 0.95))
 	left_box.add_child(hud_night)
+	hud_fuel_label = _label("DẦU  --", 14, Color(1.0, 0.86, 0.5))
+	left_box.add_child(hud_fuel_label)
+	hud_fuel = _bar(left_box)
+	hud_fuel.custom_minimum_size = Vector2(300.0, 12.0)
+	hud_fuel.max_value = 100.0
+	hud_fuel.value = 0.0
 
 	var right_panel := _panel()
 	right_panel.anchor_left = 1.0
@@ -643,7 +664,7 @@ func _build_hud() -> void:
 	right_panel.offset_left = -350.0
 	right_panel.offset_top = 18.0
 	right_panel.offset_right = -18.0
-	right_panel.offset_bottom = 168.0
+	right_panel.offset_bottom = 206.0
 	hud_root.add_child(right_panel)
 	var right_margin := _margin(right_panel, 12)
 	var right_box := _vbox(right_margin, 5)
@@ -651,6 +672,8 @@ func _build_hud() -> void:
 	right_box.add_child(hud_score)
 	hud_lanterns = _label("ĐÈN  0/5", 18, Color(1.0, 0.82, 0.42))
 	right_box.add_child(hud_lanterns)
+	hud_capacity = _label("TÚI  0/10", 15, Color(0.8, 0.88, 1.0))
+	right_box.add_child(hud_capacity)
 	hud_wind = _label("", 15, Color(0.55, 0.9, 1.0))
 	right_box.add_child(hud_wind)
 	hud_fps = _label("", 13, Color(0.5, 0.62, 0.78))
@@ -663,14 +686,15 @@ func _build_hud() -> void:
 	slots_panel.anchor_bottom = 1.0
 	slots_panel.offset_left = 18.0
 	slots_panel.offset_top = -140.0
-	slots_panel.offset_right = 390.0
+	slots_panel.offset_right = 660.0
 	slots_panel.offset_bottom = -18.0
 	hud_root.add_child(slots_panel)
 	var slots_margin := _margin(slots_panel, 12)
 	var slots_box := _vbox(slots_margin, 6)
-	slots_box.add_child(_label("ĐOM ĐÓM  / 10", 14, Color(0.8, 0.86, 1.0)))
+	hud_slots_label = _label("ĐOM ĐÓM  0/10", 14, Color(0.8, 0.86, 1.0))
+	slots_box.add_child(hud_slots_label)
 	var slot_row := _hbox(slots_box, 5)
-	for i in 10:
+	for i in 20:
 		var slot := ColorRect.new()
 		slot.custom_minimum_size = Vector2(24.0, 24.0)
 		slot.color = Color(0.12, 0.16, 0.24, 0.9)
@@ -772,6 +796,7 @@ func _reset_state() -> void:
 	sim_time = 0.0
 	won = false
 	end_reason = ""
+	successful_lights = 0
 	cam_yaw = 0.0
 	cam_pitch = -0.24
 	player.position = pos
@@ -820,11 +845,11 @@ func _show_intro(n: int) -> void:
 	intro_title.text = title_text
 	match n:
 		1:
-			intro_desc.text = "Một hòn đảo tròn yên tĩnh, 5 ngọn đèn và những đốm sáng lang thang. Hãy học cách đi, nhặt và thắp sáng."
+			intro_desc.text = "Một hòn đảo tròn yên tĩnh, 5 ngọn đèn và những đốm sáng lang thang. Hãy học cách nhặt đom đóm, nạp dầu và giữ đèn sáng."
 		2:
-			intro_desc.text = "Hai hòn đảo nối bằng cây cầu hẹp. Bóng Ma Lạc xuất hiện; hãy tìm bùa gió và giữ khoảng cách."
+			intro_desc.text = "Hai hòn đảo nối bằng cây cầu hẹp. Bóng Ma Lạc xuất hiện; hãy tìm bùa gió và giữ đèn trên 30 dầu."
 		3:
-			intro_desc.text = "Ba tầng đảo, dốc đá, bệ nhảy và gió mạnh. Thắp sáng 7 ngọn đèn rồi đánh thức tháp chuông."
+			intro_desc.text = "Ba tầng đảo, dốc đá, bệ nhảy và gió mạnh. Giữ ít nhất 60% số đèn sáng tới bình minh."
 	intro_start.text = "Bắt đầu đêm %d" % n
 	menu_root.visible = false
 	intro_root.visible = true
@@ -919,6 +944,18 @@ func _on_setting_changed(value: float, key: String) -> void:
 	_save_settings()
 
 
+func _on_color_mode_selected(index: int) -> void:
+	settings["color_mode"] = "colorblind" if index == 1 else "default"
+	_save_settings()
+	_apply_color_mode()
+
+
+func _apply_color_mode() -> void:
+	for lantern in lanterns:
+		_refresh_lantern(lantern)
+	_update_hud()
+
+
 func _apply_audio_settings() -> void:
 	if audio == null:
 		return
@@ -935,6 +972,9 @@ func _load_settings() -> void:
 	settings["music"] = clampf(float(cfg.get_value("audio", "music", settings["music"])), 0.0, 1.0)
 	settings["sfx"] = clampf(float(cfg.get_value("audio", "sfx", settings["sfx"])), 0.0, 1.0)
 	settings["sensitivity"] = clampf(float(cfg.get_value("input", "sensitivity", settings["sensitivity"])), 0.5, 3.0)
+	settings["color_mode"] = str(cfg.get_value("display", "color_mode", settings["color_mode"]))
+	if settings["color_mode"] != "colorblind":
+		settings["color_mode"] = "default"
 
 
 func _save_settings() -> void:
@@ -943,6 +983,7 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "music", settings["music"])
 	cfg.set_value("audio", "sfx", settings["sfx"])
 	cfg.set_value("input", "sensitivity", settings["sensitivity"])
+	cfg.set_value("display", "color_mode", settings["color_mode"])
 	cfg.save(SETTINGS_PATH)
 
 
@@ -1057,6 +1098,149 @@ func _all_lit() -> bool:
 		if not bool(lantern["lit"]):
 			return false
 	return true
+
+
+func _capacity() -> int:
+	return mini(int(T["capacity_max"]), int(T["carry_capacity"]) + int(T["capacity_per_light"]) * successful_lights)
+
+
+func _dawn_threshold() -> int:
+	return ceili(float(T["dawn_lantern_ratio"]) * lanterns.size())
+
+
+func _lit_count() -> int:
+	var count := 0
+	for lantern in lanterns:
+		if bool(lantern["lit"]):
+			count += 1
+	return count
+
+
+func _lantern_cost(lantern: Dictionary) -> int:
+	return int(T["relight_cost"]) if bool(lantern.get("ever_lit", false)) else int(T["new_light_cost"])
+
+
+func _lantern_can_receive(lantern: Dictionary) -> bool:
+	if bool(lantern["lit"]):
+		return int(lantern["fuel"]) < int(T["lantern_fuel_max"]) and carried > 0
+	return carried >= _lantern_cost(lantern)
+
+
+func _nearest_receiving_lantern(p: Vector3) -> Dictionary:
+	var best: Dictionary = {}
+	var best_d := float(T["interact_radius"])
+	var best_id := "~"
+	for lantern in lanterns:
+		if not _lantern_can_receive(lantern):
+			continue
+		var d := Vector2(p.x - lantern["pos"].x, p.z - lantern["pos"].z).length()
+		var id := str(lantern["id"])
+		if d < best_d or (is_equal_approx(d, best_d) and id < best_id):
+			best_d = d
+			best_id = id
+			best = lantern
+	return best
+
+
+func _nearest_lantern(p: Vector3, max_distance: float) -> Dictionary:
+	var best: Dictionary = {}
+	var best_d := max_distance
+	for lantern in lanterns:
+		var d := Vector2(p.x - lantern["pos"].x, p.z - lantern["pos"].z).length()
+		if d < best_d:
+			best_d = d
+			best = lantern
+	return best
+
+
+func _weakest_lit_lantern() -> Dictionary:
+	var best: Dictionary = {}
+	var best_fuel := 1e20
+	var best_d := 1e20
+	var best_id := "~"
+	for lantern in lanterns:
+		if not bool(lantern["lit"]):
+			continue
+		var fuel := int(lantern["fuel"])
+		var d := Vector2(pos.x - lantern["pos"].x, pos.z - lantern["pos"].z).length()
+		var id := str(lantern["id"])
+		if fuel < best_fuel or (fuel == best_fuel and (d < best_d or (d == best_d and id < best_id))):
+			best_fuel = fuel
+			best_d = d
+			best_id = id
+			best = lantern
+	return best
+
+
+func _compass_target() -> Dictionary:
+	var unlit := _nearest_unlit_lantern(pos)
+	if not unlit.is_empty():
+		return unlit
+	return _weakest_lit_lantern()
+
+
+func _wander_target(from: Vector3) -> Dictionary:
+	var best: Dictionary = {}
+	var best_fuel := 1e20
+	var best_d := 1e20
+	var best_id := "~"
+	for lantern in lanterns:
+		if not bool(lantern["lit"]):
+			continue
+		var fuel := int(lantern["fuel"])
+		var d := Vector2(from.x - lantern["pos"].x, from.z - lantern["pos"].z).length()
+		var id := str(lantern["id"])
+		if fuel < best_fuel or (fuel == best_fuel and (d < best_d or (d == best_d and id < best_id))):
+			best_fuel = fuel
+			best_d = d
+			best_id = id
+			best = lantern
+	return best
+
+
+func _push_shades(lantern: Dictionary) -> void:
+	for shade in shades:
+		var d := Vector2(shade["pos"].x - lantern["pos"].x, shade["pos"].z - lantern["pos"].z)
+		if d.length() > float(T["fuel_push_radius_m"]):
+			continue
+		var dir := d.normalized() if d.length() > 0.01 else Vector2.RIGHT
+		shade["pos"] += Vector3(dir.x, 0.0, dir.y) * float(T["fuel_push_m"])
+		shade["stun"] = 0.0
+		shade["state"] = "wander"
+		shade["drain_target"] = ""
+
+
+func _drain_lanterns(delta: float) -> void:
+	var units := {}
+	for lantern in lanterns:
+		if bool(lantern["lit"]):
+			var lantern_id := str(lantern["id"])
+			units[lantern_id] = float(units.get(lantern_id, 0.0)) + float(T["ambient_drain_per_s"])
+	for shade in shades:
+		if str(shade.get("state", "")) == "drain" and str(shade.get("drain_target", "")) != "":
+			var shade_target := str(shade["drain_target"])
+			units[shade_target] = float(units.get(shade_target, 0.0)) + float(T["shade_drain_per_s"])
+	for lantern in lanterns:
+		if not bool(lantern["lit"]):
+			continue
+		var u := float(units.get(str(lantern["id"]), 0.0))
+		if u <= 0.0:
+			continue
+		lantern["drain_acc"] = float(lantern["drain_acc"]) + u * delta
+		var changed := false
+		while float(lantern["drain_acc"]) >= 1.0 and int(lantern["fuel"]) > 0:
+			lantern["drain_acc"] = float(lantern["drain_acc"]) - 1.0
+			lantern["fuel"] = int(lantern["fuel"]) - 1
+			changed = true
+		lantern["deposited"] = int(lantern["fuel"])
+		if int(lantern["fuel"]) <= 0:
+			lantern["fuel"] = 0
+			lantern["deposited"] = 0
+			lantern["lit"] = false
+			lantern["drain_acc"] = 0.0
+			changed = true
+		if changed:
+			_refresh_lantern(lantern)
 
 
 func _update_game(delta: float) -> void:
@@ -1178,7 +1362,7 @@ func _update_game(delta: float) -> void:
 			var d := Vector2(target["pos"].x - wisp["pos"].x, target["pos"].z - wisp["pos"].z)
 			var length := d.length()
 			if length > 0.05:
-				wisp["pos"] += Vector3(d.x / length, 0.0, d.y / length) * min(length, wisp_speed * delta)
+				wisp["pos"] += Vector3(d.x / length, 0.0, d.y / length) * minf(length, wisp_speed * delta)
 		if wind_shield <= 0.0 and Vector2(pos.x - wisp["pos"].x, pos.z - wisp["pos"].z).length() <= float(T["lost_wisp_radius_m"]):
 			var d := Vector2(pos.x - wisp["pos"].x, pos.z - wisp["pos"].z)
 			var length := d.length()
@@ -1187,40 +1371,68 @@ func _update_game(delta: float) -> void:
 
 	var shade_speed := float(T.get("night%d_shade_speed" % night, T["shade_speed"]))
 	for shade in shades:
+		shade["drain_target"] = ""
 		if shade["stun"] > 0.0:
 			shade["stun"] = max(0.0, shade["stun"] - delta)
+			shade["state"] = "stunned"
 			continue
 		var safe := false
 		for lantern in lanterns:
-			if bool(lantern["lit"]) and Vector2(shade["pos"].x - lantern["pos"].x, shade["pos"].z - lantern["pos"].z).length() <= float(T["safe_radius"]):
+			if bool(lantern["lit"]) and int(lantern["fuel"]) >= int(T["safe_fuel_threshold"]) and Vector2(shade["pos"].x - lantern["pos"].x, shade["pos"].z - lantern["pos"].z).length() <= float(T["safe_radius"]):
 				safe = true
 				break
 		if safe:
+			shade["state"] = "wander"
 			continue
 		var d := Vector2(pos.x - shade["pos"].x, pos.z - shade["pos"].z)
 		var distance := d.length()
-		if distance > 0.05:
-			shade["pos"] += Vector3(d.x / distance, 0.0, d.y / distance) * min(distance, shade_speed * delta)
-		if distance <= float(T["shade_hit_radius"]) and invuln <= 0.0:
-			_hit_by_shade()
-			if state != "playing":
-				return
+		if distance <= float(T["shade_chase_radius_m"]):
+			shade["state"] = "chase"
+			if distance > 0.05:
+				shade["pos"] += Vector3(d.x / distance, 0.0, d.y / distance) * minf(distance, shade_speed * delta)
+			if distance <= float(T["shade_hit_radius"]) and invuln <= 0.0:
+				_hit_by_shade()
+				if state != "playing":
+					return
+		else:
+			var target: Dictionary = {}
+			var target_d := 1e20
+			var target_id := "~"
+			for lantern in lanterns:
+				if not bool(lantern["lit"]):
+					continue
+				var ld := Vector2(shade["pos"].x - lantern["pos"].x, shade["pos"].z - lantern["pos"].z).length()
+				if ld <= float(T["shade_drain_radius_m"]) and (ld < target_d or (ld == target_d and str(lantern["id"]) < target_id)):
+					target_d = ld
+					target_id = str(lantern["id"])
+					target = lantern
+			if not target.is_empty():
+				shade["state"] = "drain"
+				shade["drain_target"] = str(target["id"])
+			else:
+				shade["state"] = "wander"
+				var wander := _wander_target(shade["pos"])
+				if not wander.is_empty():
+					var wd := Vector2(wander["pos"].x - shade["pos"].x, wander["pos"].z - shade["pos"].z)
+					var wl := wd.length()
+					if wl > float(T["shade_drain_radius_m"]) + 0.01:
+						var move := minf(wl - float(T["shade_drain_radius_m"]), shade_speed * delta)
+						shade["pos"] += Vector3(wd.x / wl, 0.0, wd.y / wl) * move
 
+	if state != "playing":
+		return
+	_drain_lanterns(delta)
 	if state != "playing":
 		return
 	if pos.y < float(T["fall_y_m"]) and invuln <= 0.0:
 		_fall()
 		if state != "playing":
 			return
-	if _all_lit():
-		var can_win := true
-		if night == 3 and not bell.is_empty():
-			can_win = Vector2(pos.x - bell["pos"].x, pos.z - bell["pos"].z).length() <= float(T["bell_tower_radius_m"])
-		if can_win:
-			_end_game(true, "all_lit")
-			return
 	if time_left <= 0.0:
-		_end_game(false, "dawn")
+		if _lit_count() >= _dawn_threshold():
+			_end_game(true, "dawn")
+		else:
+			_end_game(false, "not_enough_lanterns")
 
 
 func _try_move(delta_move: Vector3) -> void:
@@ -1237,30 +1449,36 @@ func _try_move(delta_move: Vector3) -> void:
 
 
 func _interact() -> void:
-	var best: Dictionary = {}
-	var best_d := float(T["interact_radius"])
-	for lantern in lanterns:
-		if bool(lantern["lit"]):
-			continue
-		var d := Vector2(pos.x - lantern["pos"].x, pos.z - lantern["pos"].z).length()
-		if d <= best_d:
-			best_d = d
-			best = lantern
-	if not best.is_empty() and carried > 0:
-		var amount := int(min(carried, int(T["lantern_cost"]) - int(best["deposited"])))
-		carried -= amount
-		best["deposited"] = int(best["deposited"]) + amount
-		audio.play("deposit")
-		if int(best["deposited"]) >= int(T["lantern_cost"]):
-			best["lit"] = true
-			score += int(T["score"]["per_lantern"])
-			audio.play("lantern")
-			_refresh_lantern(best)
+	var best := _nearest_receiving_lantern(pos)
+	if not best.is_empty():
+		var before := int(best["fuel"])
+		if bool(best["lit"]):
+			var needed := ceili((float(T["lantern_fuel_max"]) - float(before)) / float(T["refuel_fuel_per_mote"]))
+			var used := mini(carried, needed)
+			carried -= used
+			best["fuel"] = mini(int(T["lantern_fuel_max"]), before + used * int(T["refuel_fuel_per_mote"]))
+			best["deposited"] = int(best["fuel"])
+			audio.play("deposit")
 		else:
-			_refresh_lantern(best)
+			var mode := "relight" if bool(best["ever_lit"]) else "new"
+			var cost := int(T["relight_cost"]) if mode == "relight" else int(T["new_light_cost"])
+			carried -= cost
+			best["fuel"] = int(T["lantern_fuel_max"])
+			best["deposited"] = int(best["fuel"])
+			best["lit"] = true
+			best["ever_lit"] = true
+			best["drain_acc"] = 0.0
+			if mode == "relight":
+				best["relit_count"] = int(best["relit_count"]) + 1
+			successful_lights += 1
+			score += int(T["score"]["per_relight"]) if mode == "relight" else int(T["score"]["per_lantern"])
+			audio.play("lantern")
+		if before < int(T["safe_fuel_threshold"]) and int(best["fuel"]) >= int(T["safe_fuel_threshold"]):
+			_push_shades(best)
+		_refresh_lantern(best)
 		return
 	var mote := _nearest_mote(pos)
-	if not mote.is_empty() and Vector2(pos.x - mote["pos"].x, pos.z - mote["pos"].z).length() <= float(T["pickup_radius"]) and carried < int(T["carry_capacity"]):
+	if not mote.is_empty() and Vector2(pos.x - mote["pos"].x, pos.z - mote["pos"].z).length() <= float(T["pickup_radius"]) and carried < _capacity():
 		motes.erase(mote)
 		if is_instance_valid(mote["node"]):
 			mote["node"].queue_free()
@@ -1301,15 +1519,13 @@ func _end_game(did_win: bool, reason: String) -> void:
 	won = did_win
 	end_reason = reason
 	if did_win:
-		score += int(max(0.0, time_left)) + flames * int(T["score"]["per_flame_left"])
+		score += int(T["score"]["dawn_bonus"]) + flames * int(T["score"]["per_flame_left"])
 		audio.play("win")
 	else:
 		audio.play("lose")
 	end_title.text = "BÌNH MINH" if did_win else "MÀN ĐÊM NUỐT CHỬNG"
 	end_title.add_theme_color_override("font_color", Color(0.72, 0.95, 0.62) if did_win else Color(1.0, 0.5, 0.45))
 	end_detail.text = _reason_text(reason)
-	if did_win and night == 3:
-		end_detail.text = "Bạn đã thắp sáng tháp chuông. Hòn đảo thức giấc trong bình minh."
 	end_score.text = "ĐIỂM  %d" % score
 	end_next.visible = did_win and night < 3
 	end_root.visible = true
@@ -1319,10 +1535,10 @@ func _end_game(did_win: bool, reason: String) -> void:
 
 func _reason_text(reason: String) -> String:
 	match reason:
-		"all_lit":
-			return "Tất cả ngọn đèn đã sáng. Bạn đã giữ được ngọn lửa qua đêm."
 		"dawn":
-			return "Bình minh đã đến trước khi bạn hoàn thành. Hãy thử lại đêm nay."
+			return "Bình minh đã đến. Bạn giữ được %d/%d ngọn đèn sáng." % [_lit_count(), lanterns.size()]
+		"not_enough_lanterns":
+			return "Bình minh đã đến nhưng bạn chỉ giữ %d/%d đèn. Cần ít nhất %d đèn sáng." % [_lit_count(), lanterns.size(), _dawn_threshold()]
 		"no_flames":
 			return "Ngọn lửa cuối cùng đã tắt. Hãy thử lại đêm nay."
 		_:
@@ -1403,6 +1619,7 @@ func _update_visuals(delta: float) -> void:
 		var h = _surface_height(shade["pos"].x, shade["pos"].z)
 		var y := (float(h) if h != null else 0.0) + 0.75
 		shade["node"].position = Vector3(shade["pos"].x, y, shade["pos"].z)
+		shade["mat"].emission_energy_multiplier = 2.2 if str(shade.get("state", "")) == "drain" else 1.2
 		if shade["stun"] > 0.0:
 			shade["node"].rotate_y(delta * 8.0)
 	for wisp in wisps:
@@ -1426,11 +1643,28 @@ func _update_hud() -> void:
 	hud_timer.add_theme_color_override("font_color", Color(1.0, 0.45, 0.4) if time_left < 30.0 else Color(0.82, 0.92, 1.0))
 	hud_night.text = "ĐÊM %d  •  %s" % [night, str(map.get("name", ""))]
 	hud_score.text = "ĐIỂM  %d" % score
-	var lit := 0
-	for lantern in lanterns:
-		if bool(lantern["lit"]):
-			lit += 1
-	hud_lanterns.text = "ĐÈN  %d/%d" % [lit, lanterns.size()]
+	var lit := _lit_count()
+	var threshold := _dawn_threshold()
+	hud_lanterns.text = "ĐÈN  %d/%d  •  mốc %d" % [lit, lanterns.size(), threshold]
+	hud_capacity.text = "TÚI  %d/%d" % [carried, _capacity()]
+	hud_slots_label.text = "ĐOM ĐÓM  %d/%d" % [carried, _capacity()]
+	var colorblind := str(settings["color_mode"]) == "colorblind"
+	hud_lanterns.add_theme_color_override("font_color", Color(0.72, 0.95, 1.0) if colorblind else Color(1.0, 0.82, 0.42))
+	var target := _nearest_lantern(pos, 12.0)
+	if target.is_empty():
+		target = _nearest_lantern(pos, 1e9)
+	if target.is_empty():
+		hud_fuel_label.text = "DẦU  --"
+		hud_fuel.value = 0.0
+		hud_fuel.modulate = Color(1.0, 1.0, 1.0, 0.5)
+	else:
+		var fuel := int(target["fuel"])
+		var target_state := "SÁNG" if bool(target["lit"]) else "TẮT"
+		hud_fuel_label.text = "DẦU  %s  %s  %d/100" % [str(target["id"]), target_state, fuel]
+		hud_fuel.value = float(fuel)
+		var blink := fuel < int(T["safe_fuel_threshold"]) and int(sim_time * 2.0) % 2 == 0
+		var alpha := 0.35 if blink else 1.0
+		hud_fuel.modulate = Color(0.75, 0.92, 1.0, alpha) if colorblind else Color(1.0, 0.7, 0.45, alpha)
 	if wind_shield > 0.0:
 		hud_wind.text = "BÙA GIÓ  %.1fs" % wind_shield
 	elif _wind_at(pos) != Vector3.ZERO:
@@ -1438,7 +1672,11 @@ func _update_hud() -> void:
 	else:
 		hud_wind.text = ""
 	for i in hud_slots.size():
-		hud_slots[i].color = Color(1.0, 0.72, 0.2) if i < carried else Color(0.12, 0.16, 0.24, 0.9)
+		hud_slots[i].visible = i < _capacity()
+		if i < carried:
+			hud_slots[i].color = Color(0.4, 0.9, 1.0) if colorblind else Color(1.0, 0.72, 0.2)
+		else:
+			hud_slots[i].color = Color(0.12, 0.16, 0.24, 0.9)
 	hud_dash.value = 1.0 if dash_cd <= 0.0 else 1.0 - dash_cd / max(0.001, float(T["dash_cooldown_s"]))
 	hud_pulse.value = 1.0 if pulse_cd <= 0.0 else 1.0 - pulse_cd / max(0.001, float(T["pulse_cooldown_s"]))
 	hud_dash_label.text = "Lướt" if dash_cd <= 0.0 else "Lướt %.1f" % dash_cd
@@ -1447,55 +1685,72 @@ func _update_hud() -> void:
 	hud_prompt.text = _prompt_text()
 	hud_warning.text = _warning_text()
 	hud_warning.visible = hud_warning.text != ""
+	var low_fuel := false
+	for lantern in lanterns:
+		if bool(lantern["lit"]) and int(lantern["fuel"]) < int(T["safe_fuel_threshold"]):
+			low_fuel = true
+			break
+	var warning_alpha := 0.35 if low_fuel and int(sim_time * 2.0) % 2 == 0 else 1.0
+	hud_warning.modulate = Color(1.0, 1.0, 1.0, warning_alpha)
 	_update_compass()
 
 
 func _prompt_text() -> String:
-	var lantern := _nearest_unlit_lantern(pos)
-	if not lantern.is_empty() and Vector2(pos.x - lantern["pos"].x, pos.z - lantern["pos"].z).length() <= float(T["interact_radius"]):
-		if carried <= 0:
-			return "Cần đom đóm để thắp đèn  •  %d/5" % int(lantern["deposited"])
-		return "E  Nạp đom đóm vào đèn  •  %d/5" % int(lantern["deposited"])
+	var lantern := _nearest_receiving_lantern(pos)
+	if not lantern.is_empty():
+		if bool(lantern["lit"]):
+			var needed := ceili((float(T["lantern_fuel_max"]) - float(lantern["fuel"])) / float(T["refuel_fuel_per_mote"]))
+			var used := mini(carried, needed)
+			return "E  Nạp dầu  •  %d/100  •  dùng %d đom" % [int(lantern["fuel"]), used]
+		var mode := "Thắp lại" if bool(lantern["ever_lit"]) else "Thắp đèn mới"
+		return "E  %s  •  %d đom" % [mode, _lantern_cost(lantern)]
+	var near := _nearest_lantern(pos, float(T["interact_radius"]))
+	if not near.is_empty():
+		if bool(near["lit"]):
+			if int(near["fuel"]) >= int(T["lantern_fuel_max"]):
+				return "Đèn đã đầy dầu"
+			return "Cần đom đóm để nạp dầu"
+		return "Cần %d đom để %s" % [_lantern_cost(near), "thắp lại" if bool(near["ever_lit"]) else "thắp đèn mới"]
 	var mote := _nearest_mote(pos)
 	if not mote.is_empty() and Vector2(pos.x - mote["pos"].x, pos.z - mote["pos"].z).length() <= float(T["pickup_radius"]):
-		if carried >= int(T["carry_capacity"]):
-			return "Đã đầy 10 đom đóm"
+		if carried >= _capacity():
+			return "Đã đầy %d đom đóm" % _capacity()
 		return "E  Nhặt đom đóm"
-	if _all_lit() and night == 3 and not bell.is_empty():
-		if Vector2(pos.x - bell["pos"].x, pos.z - bell["pos"].z).length() > float(T["bell_tower_radius_m"]):
-			return "Đi đến vòng tháp chuông"
+	if _lit_count() >= _dawn_threshold():
+		return "Giữ đèn sáng tới bình minh"
 	return ""
 
 
 func _warning_text() -> String:
 	if flames <= 1:
-		return "NGỌN LỬA CUỐI CÙNG!"
+		return "⚠ NGỌN LỬA CUỐI CÙNG!"
 	if time_left <= 30.0:
-		return "BÌNH MINH SẮP ĐẾN!"
+		return "⚠ BÌNH MINH SẮP ĐẾN!"
+	for lantern in lanterns:
+		if bool(lantern["lit"]) and int(lantern["fuel"]) < int(T["safe_fuel_threshold"]):
+			return "⚠ DẦU ĐÈN DƯỚI 30 — VÙNG AN TOÀN ĐÃ MẤT"
 	for shade in shades:
 		if Vector2(pos.x - shade["pos"].x, pos.z - shade["pos"].z).length() <= 5.0:
-			return "BÓNG TỐI ĐANG ĐẾN GẦN"
+			return "⚠ BÓNG TỐI ĐANG ĐẾN GẦN"
 	for wisp in wisps:
 		if wind_shield <= 0.0 and Vector2(pos.x - wisp["pos"].x, pos.z - wisp["pos"].z).length() <= 3.0:
-			return "BÙA GIÓ ĐÃ HẾT!"
+			return "⚠ BÙA GIÓ ĐÃ HẾT!"
 	return ""
 
 
 func _update_compass() -> void:
 	if hud_compass_arrow == null:
 		return
-	var lantern := _nearest_unlit_lantern(pos)
+	var lantern := _compass_target()
 	if lantern.is_empty():
 		hud_compass_arrow.visible = false
-		if _all_lit() and night == 3:
-			hud_compass_label.text = "Đến tháp chuông"
-		else:
-			hud_compass_label.text = "Tất cả đèn đã sáng"
+		hud_compass_label.text = "Không còn đèn"
 		return
 	var to := Vector2(lantern["pos"].x - pos.x, lantern["pos"].z - pos.z)
 	hud_compass_arrow.visible = true
 	hud_compass_arrow.rotation = atan2(to.x, -to.y) + cam_yaw
-	hud_compass_label.text = "Đèn gần nhất  %.0fm" % to.length()
+	var tag := "Đèn yếu nhất" if bool(lantern["lit"]) else "Đèn gần nhất"
+	hud_compass_label.text = "%s  %.0fm  •  %d/100" % [tag, to.length(), int(lantern["fuel"])]
 
 
 func _build_world() -> void:
@@ -1783,32 +2038,43 @@ func _build_lanterns() -> void:
 		label.no_depth_test = true
 		label.outline_size = 6
 		label.modulate = Color(0.75, 0.85, 1.0)
-		label.text = "%s 0/5" % str(item.get("id", "L"))
+		label.text = "%s  TẮT  0/100" % str(item.get("id", "L"))
 		node.add_child(label)
-		var lantern := {"id": str(item.get("id", "L")), "pos": p, "deposited": 0, "lit": false, "node": node, "cage": cage, "mat": cage_mat, "light": light, "label": label}
+		var lantern := {"id": str(item.get("id", "L")), "pos": p, "fuel": 0, "deposited": 0, "lit": false,
+			"ever_lit": false, "relit_count": 0, "drain_acc": 0.0, "node": node, "cage": cage, "mat": cage_mat, "light": light, "label": label}
 		lanterns.append(lantern)
+		_refresh_lantern(lantern)
 
 
 func _refresh_lantern(lantern: Dictionary) -> void:
 	var lit := bool(lantern["lit"])
+	var fuel := int(lantern["fuel"])
+	var colorblind := str(settings["color_mode"]) == "colorblind"
 	var mat = lantern["mat"]
 	if lit:
-		mat.albedo_color = Color(1.0, 0.72, 0.25)
-		mat.emission = Color(1.0, 0.48, 0.1)
+		if colorblind:
+			mat.albedo_color = Color(0.82, 0.96, 1.0)
+			mat.emission = Color(0.35, 0.85, 1.0)
+			lantern["light"].light_color = Color(0.55, 0.9, 1.0)
+			lantern["label"].modulate = Color(0.8, 0.98, 1.0)
+		else:
+			mat.albedo_color = Color(1.0, 0.72, 0.25)
+			mat.emission = Color(1.0, 0.48, 0.1)
+			lantern["light"].light_color = Color(1.0, 0.66, 0.28)
+			lantern["label"].modulate = Color(1.0, 0.86, 0.48)
 		mat.emission_energy_multiplier = 2.8
-		lantern["light"].light_color = Color(1.0, 0.66, 0.28)
 		lantern["light"].light_energy = 1.7
 		lantern["light"].omni_range = 11.0
-		lantern["label"].modulate = Color(1.0, 0.86, 0.48)
+		lantern["label"].text = "%s  SÁNG  %d/100" % [str(lantern["id"]), fuel]
 	else:
-		mat.albedo_color = Color(0.2, 0.32, 0.5)
-		mat.emission = Color(0.15, 0.3, 0.65)
-		mat.emission_energy_multiplier = 0.8
-		lantern["light"].light_color = Color(0.45, 0.62, 1.0)
-		lantern["light"].light_energy = 0.8
-		lantern["light"].omni_range = 8.0
-		lantern["label"].modulate = Color(0.75, 0.85, 1.0)
-	lantern["label"].text = "%s %d/5" % [str(lantern["id"]), int(lantern["deposited"])]
+		mat.albedo_color = Color(0.24, 0.26, 0.3) if colorblind else Color(0.2, 0.32, 0.5)
+		mat.emission = Color(0.08, 0.08, 0.1) if colorblind else Color(0.15, 0.3, 0.65)
+		mat.emission_energy_multiplier = 0.4
+		lantern["light"].light_color = Color(0.5, 0.55, 0.6) if colorblind else Color(0.45, 0.62, 1.0)
+		lantern["light"].light_energy = 0.35
+		lantern["light"].omni_range = 5.0
+		lantern["label"].modulate = Color(0.72, 0.74, 0.78) if colorblind else Color(0.75, 0.85, 1.0)
+		lantern["label"].text = "%s  TẮT  %d/100" % [str(lantern["id"]), fuel]
 
 
 func _build_motes() -> void:
@@ -1880,7 +2146,8 @@ func _build_shades() -> void:
 			eye.position = Vector3(float(side), 0.2, -0.62)
 			eye.material_override = eye_mat
 			node.add_child(eye)
-		shades.append({"id": str(item.get("id", "S")), "pos": p, "node": node, "stun": 0.0})
+		shades.append({"id": str(item.get("id", "S")), "pos": p, "node": node, "mat": mat,
+			"stun": 0.0, "state": "wander", "drain_target": ""})
 
 
 func _build_wisps() -> void:

@@ -1,0 +1,12 @@
+Phase 1 core checks passed:
+- headless simulation does not import Tkinter
+- contract v1.2 tuning matches simulation constants
+- pickup 10 motes and light a new lantern
+- pulse cost, stun and score
+- shade collision, health and dropped motes
+- island edge fall damage
+- loss at zero flames
+- dawn below 60% lanterns is a loss
+- dawn with 60% lanterns wins and scores dawn bonus
+- same-seed deterministic JSONL output
+- invalid input and scenario exit with code 2

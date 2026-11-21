@@ -29,6 +29,7 @@ def build_files():
     files[Path("tuning.json")] = canonical({
         "contract_version": contract["contract_version"],
         "tuning": contract["tuning"],
+        "ui": contract.get("ui", {}),
     })
     for path in sorted(MAPS.glob("night*.json")):
         files[Path("maps") / path.name] = canonical(json.loads(path.read_text(encoding="utf-8")))

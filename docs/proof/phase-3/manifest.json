@@ -1,0 +1,442 @@
+{
+  "phase": 3,
+  "generated_at": "2026-11-21T03:07:52.278662+00:00",
+  "contract_version": "1.2",
+  "seed": 7,
+  "checks": {
+    "compile": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-m",
+        "py_compile",
+        "game.py",
+        "tools/verify_phase1.py",
+        "tools/verify_phase2.py",
+        "tools/verify_phase3.py",
+        "tools/capture_phase1_evidence.py",
+        "tools/capture_phase2_evidence.py",
+        "tools/capture_phase3_evidence.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/compile.log"
+    },
+    "sync-check": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/sync_shared.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/sync-check.log"
+    },
+    "verify-phase1": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/verify_phase1.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/verify-phase1.log"
+    },
+    "verify-phase2": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/verify_phase2.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/verify-phase2.log"
+    },
+    "verify-phase3": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/verify_phase3.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/verify-phase3.log"
+    },
+    "web-check": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/web-check.log"
+    },
+    "build-web": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/build_web.py"
+      ],
+      "exit": 0,
+      "log": "docs/proof/phase-3/build-web.log"
+    },
+    "refuel": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "5",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\refuel-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\refuel.jsonl",
+        "--inputs",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\refuel-inputs.json"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/refuel.jsonl"
+    },
+    "depletion": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "61",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\depletion-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\depletion.jsonl"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/depletion.jsonl"
+    },
+    "drain": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "30",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\drain-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\drain.jsonl"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/drain.jsonl"
+    },
+    "relight": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "5",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\relight-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\relight.jsonl",
+        "--inputs",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\relight-inputs.json"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/relight.jsonl"
+    },
+    "pushback": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "5",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\pushback-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\pushback.jsonl",
+        "--inputs",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\pushback-inputs.json"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/pushback.jsonl"
+    },
+    "dawn-threshold": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "1",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\dawn-threshold-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\dawn-threshold.jsonl"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/dawn-threshold.jsonl"
+    },
+    "colorblind": {
+      "cmd": [
+        "C:\\Users\\CTN_Number_ONE\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "game.py",
+        "--headless",
+        "--seed",
+        "7",
+        "--night",
+        "1",
+        "--ticks",
+        "1",
+        "--snapshot-every",
+        "1",
+        "--scenario",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\colorblind-scenario.json",
+        "--out",
+        "C:\\Users\\CTN_Number_ONE\\Desktop\\K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long\\docs\\proof\\phase-3\\colorblind.jsonl"
+      ],
+      "exit": 0,
+      "out": "docs/proof/phase-3/colorblind.jsonl"
+    },
+    "determinism-drain": {
+      "hashes": [
+        "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f",
+        "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+      ],
+      "equal": true
+    },
+    "godot-capture": {
+      "cmd": "godot --path godot -- --capture",
+      "exit": 0
+    }
+  },
+  "failures": [],
+  "files": [
+    {
+      "path": "docs/proof/phase-3/build-web.log",
+      "bytes": 3290,
+      "sha256": "c7c7523977f46ae86e5a808b9f4680516cb35de39c6432180bb48e91f327a768"
+    },
+    {
+      "path": "docs/proof/phase-3/colorblind-scenario.json",
+      "bytes": 208,
+      "sha256": "89f7f4ae006b8572fafb9fbb8cc6317eef8725197a548066774452fa7ca7bb70"
+    },
+    {
+      "path": "docs/proof/phase-3/colorblind.jsonl",
+      "bytes": 1827,
+      "sha256": "eb1cbe4ca51fa05b22723e2545d43ef0a9b11e864d20e1ac8b564ac5db368f34"
+    },
+    {
+      "path": "docs/proof/phase-3/colorblind.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/dawn-threshold-scenario.json",
+      "bytes": 420,
+      "sha256": "b519411edc2d5a6bb6d51e6bdba46457efac6666e468b23999c0067fa11bec37"
+    },
+    {
+      "path": "docs/proof/phase-3/dawn-threshold.jsonl",
+      "bytes": 1957,
+      "sha256": "c72eb4bdc2f7ad39d7aa14743fa46b221ba32603024b10a3c27a4f1760e8a553"
+    },
+    {
+      "path": "docs/proof/phase-3/dawn-threshold.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/depletion-scenario.json",
+      "bytes": 426,
+      "sha256": "5af76aa0a9ce78c2659b69ffaa4fd12ad3cda336f5f631f39ccba724fb1b1601"
+    },
+    {
+      "path": "docs/proof/phase-3/depletion.jsonl",
+      "bytes": 54571,
+      "sha256": "822bfd175cf072da59d3a365bd7baaef3de751c723c0ec805d5aba831c87ce6e"
+    },
+    {
+      "path": "docs/proof/phase-3/depletion.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/drain-determinism-1.jsonl",
+      "bytes": 12283,
+      "sha256": "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+    },
+    {
+      "path": "docs/proof/phase-3/drain-determinism-1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/drain-determinism-2.jsonl",
+      "bytes": 12283,
+      "sha256": "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+    },
+    {
+      "path": "docs/proof/phase-3/drain-determinism-2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/drain-scenario.json",
+      "bytes": 524,
+      "sha256": "92699230be749ee80fc1e56e0a42bc6512f7c9d56d0f9309bc88043a87149684"
+    },
+    {
+      "path": "docs/proof/phase-3/drain.jsonl",
+      "bytes": 29174,
+      "sha256": "258408c66036b4245d53e6c23825d035dd70f0f1eabbde3cc0f9e39b1b7102c4"
+    },
+    {
+      "path": "docs/proof/phase-3/drain.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/godot-capture.log",
+      "bytes": 476,
+      "sha256": "49a1dff81161ab1ccc4ad2acea810b25edd7fa73f5c2b96fb47a2674800ccba2"
+    },
+    {
+      "path": "docs/proof/phase-3/menu-1280x720.png",
+      "bytes": 163735,
+      "sha256": "412548841ac103b9482e9c2e8a670cdc3c39269b9d12b7f38cd6eb45e8bcf9b6"
+    },
+    {
+      "path": "docs/proof/phase-3/night1-1280x720.png",
+      "bytes": 174643,
+      "sha256": "cf783783b32a2200afb264246c7165e132ab663604be642bf3ee34909bb99ac5"
+    },
+    {
+      "path": "docs/proof/phase-3/night3-1280x720.png",
+      "bytes": 214977,
+      "sha256": "d349a2ce1a689ba3e9aa8a72c3795990000f6dd6e2a1628bbc1027ddeca28099"
+    },
+    {
+      "path": "docs/proof/phase-3/pushback-inputs.json",
+      "bytes": 45,
+      "sha256": "45a64e3f63b5fc060865a5e3074ed70b5f1c05dd64b39ebb320d8ee368315b3a"
+    },
+    {
+      "path": "docs/proof/phase-3/pushback-scenario.json",
+      "bytes": 522,
+      "sha256": "25ba803e0e2dfe7277cd769c2265a6f00401fe8b7182e4763ecf6dcb76b7d542"
+    },
+    {
+      "path": "docs/proof/phase-3/pushback.jsonl",
+      "bytes": 5924,
+      "sha256": "1dfd31a07c46bb8211573d8fb66f74715405969374a8ff4854d8ec1144c127a9"
+    },
+    {
+      "path": "docs/proof/phase-3/pushback.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/README.md",
+      "bytes": 1623,
+      "sha256": "9995fe3b2ffd3512f6422a68279a34c5c8b9c66e15228f19e6ce7c106b339324"
+    },
+    {
+      "path": "docs/proof/phase-3/refuel-inputs.json",
+      "bytes": 45,
+      "sha256": "45a64e3f63b5fc060865a5e3074ed70b5f1c05dd64b39ebb320d8ee368315b3a"
+    },
+    {
+      "path": "docs/proof/phase-3/refuel-scenario.json",
+      "bytes": 557,
+      "sha256": "9c39d2f05c450a9a4fcb1802834c5b2ead12e194afc7972e657877c271bd6e47"
+    },
+    {
+      "path": "docs/proof/phase-3/refuel.jsonl",
+      "bytes": 5426,
+      "sha256": "e42dfcd71a57de3a930004e25c5f9c8e2f7b7956cabea59a26524bd6087e58ef"
+    },
+    {
+      "path": "docs/proof/phase-3/refuel.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/relight-inputs.json",
+      "bytes": 45,
+      "sha256": "45a64e3f63b5fc060865a5e3074ed70b5f1c05dd64b39ebb320d8ee368315b3a"
+    },
+    {
+      "path": "docs/proof/phase-3/relight-scenario.json",
+      "bytes": 447,
+      "sha256": "5894667a5c8f93e7ce7b098a111f2ee51fbe62b3730819e9a9384e6eed271a91"
+    },
+    {
+      "path": "docs/proof/phase-3/relight.jsonl",
+      "bytes": 5495,
+      "sha256": "d2b6a03e9a0e345970188b895a25f7b397615aaf2b557b4e4d9701a7b605bc2f"
+    },
+    {
+      "path": "docs/proof/phase-3/relight.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/proof/phase-3/sync-check.log",
+      "bytes": 24,
+      "sha256": "41fe08141ae9fca9798bc68e35ddccddc78d41c27c3af0b2fcdfcc2269c77526"
+    },
+    {
+      "path": "docs/proof/phase-3/verify-phase1.log",
+      "bytes": 474,
+      "sha256": "719c2682805b35e9400abc95e613a922869c3193716cfbaa839f3eacff36ab2e"
+    },
+    {
+      "path": "docs/proof/phase-3/verify-phase2.log",
+      "bytes": 744,
+      "sha256": "85dd7e56531abb581628e81924f46eb506238684e55decec77f048086cd88470"
+    },
+    {
+      "path": "docs/proof/phase-3/verify-phase3.log",
+      "bytes": 1198,
+      "sha256": "92be951700fb0650f38fb0dbb9bd9255df1c8619c7a063a21352e95eaba1fd6b"
+    },
+    {
+      "path": "docs/proof/phase-3/web-check.log",
+      "bytes": 388,
+      "sha256": "7bae228db7a508bee14657cab90c703514c902815d1dcf8e7a58d5ac1a15e5e5"
+    }
+  ],
+  "git_head": "deb545508dfb83252fd4ea18836a11e7854763f3"
+}

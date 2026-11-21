@@ -1,6 +1,6 @@
 # Day 12 — AI SDLC: Đảo Đèn Lồng
 
-## Bản game Phase 2
+## Bản game Phase 3
 
 Game dùng Python 3.10+ cho phần mô phỏng/headless và **Godot 4.7.2** cho GUI 3D thật. Trên Windows chạy bằng `python`; trên Linux/macOS dùng `python3`. Không cần Tkinter.
 
@@ -10,7 +10,7 @@ python3 tools/build_web.py
 python3 game.py
 ```
 
-Trên Windows thay `python3` bằng `python`. Lần đầu cần cài Godot 4.7.2 và export templates Web. `python game.py` tự phục vụ `build/web` và mở trình duyệt; thêm `--build` để build lại trước khi chạy. Điều khiển: WASD di chuyển, chuột xoay camera, Space nhảy/giữ để liệng, Shift lướt, E nhặt đóm/nạp đèn, F xung sáng, Esc tạm dừng. Thắp đủ đèn và (đêm 3) đứng trong vùng tháp chuông để thắng.
+Trên Windows thay `python3` bằng `python`. Lần đầu cần cài Godot 4.7.2 và export templates Web. `python game.py` tự phục vụ `build/web` và mở trình duyệt; thêm `--build` để build lại trước khi chạy. Điều khiển: WASD di chuyển, chuột xoay camera, Space nhảy/giữ để liệng, Shift lướt, E nhặt đóm/nạp dầu/thắp đèn, F xung sáng, Esc tạm dừng. Đèn mới tốn 10 đóm, thắp lại tốn 5, mỗi đóm nạp 10 dầu. Giữ đèn ít nhất 30 dầu để duy trì vùng an toàn; thắng khi bình minh đến và còn ít nhất 60% số đèn sáng.
 
 Chạy contract headless (không cần Godot, cửa sổ hay GPU):
 
@@ -18,11 +18,11 @@ Chạy contract headless (không cần Godot, cửa sổ hay GPU):
 python3 game.py --headless --seed 7 --night 1 --ticks 600 --out out.jsonl
 ```
 
-`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py` và `python3 tools/verify_phase2.py` để tái lập các scenario kiểm tra; bảng bằng chứng Phase 1 ở [docs/proof/phase-1/README.md](docs/proof/phase-1/README.md), Phase 2 ở [docs/proof/phase-2](docs/proof/phase-2). Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md), [docs/notes/phase-2-assumptions.md](docs/notes/phase-2-assumptions.md).
+`game.contract.json` ghi lệnh và tuning. Chạy `python3 tools/verify_phase1.py`, `python3 tools/verify_phase2.py` và `python3 tools/verify_phase3.py` để tái lập các scenario kiểm tra; bảng bằng chứng Phase 1 ở [docs/proof/phase-1/README.md](docs/proof/phase-1/README.md), Phase 2 ở [docs/proof/phase-2](docs/proof/phase-2), Phase 3 ở [docs/proof/phase-3](docs/proof/phase-3). Ghi chú giả định và luật điểm: [docs/notes/phase-1-assumptions.md](docs/notes/phase-1-assumptions.md), [docs/notes/phase-2-assumptions.md](docs/notes/phase-2-assumptions.md), [docs/notes/phase-3-assumptions.md](docs/notes/phase-3-assumptions.md).
 
 ### Sáng tạo của tôi
 
-GUI 3D có thêm đảo, đèn, đom đóm, bóng tối, tháp chuông và hiệu ứng ánh sáng/âm thanh trang trí. Đây chỉ là lớp trình bày, không thêm thực thể gameplay và không đổi contract output; bộ scenario headless vẫn đạt sau khi thêm hiệu ứng.
+GUI 3D có thêm đảo, đèn, đom đóm, bóng tối, tháp chuông, thanh dầu, cảnh báo dầu thấp và chế độ bảng màu dễ phân biệt. Đây chỉ là lớp trình bày, không thêm thực thể gameplay và không đổi contract output; bộ scenario headless vẫn đạt sau khi thêm hiệu ứng.
 
 > **Cá nhân** (1 người / 1 MSSV) · Áp dụng SDLC cùng AI để xây một **game 3D** qua **4 phase**, từ yêu cầu ban đầu tới bản phát hành.
 > **Lab board + trợ giảng:** **[Đảo Đèn Lồng Lab](https://claude.ai/artifact/Q1RYyv1dxjUczzCbd2ZnoW)**

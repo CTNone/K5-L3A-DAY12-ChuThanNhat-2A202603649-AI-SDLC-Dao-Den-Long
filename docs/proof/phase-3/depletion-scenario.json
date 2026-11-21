@@ -1,0 +1,30 @@
+{
+  "random_motes": false,
+  "random_shades": false,
+  "random_wisps": false,
+  "random_charms": false,
+  "motes": [],
+  "wisps": [],
+  "charms": [],
+  "player": {
+    "pos": [
+      10,
+      0,
+      0
+    ]
+  },
+  "time_left_s": 300,
+  "lanterns": [
+    {
+      "id": "L1",
+      "pos": [
+        0,
+        0,
+        0
+      ],
+      "lit": true,
+      "fuel": 1
+    }
+  ],
+  "shades": []
+}

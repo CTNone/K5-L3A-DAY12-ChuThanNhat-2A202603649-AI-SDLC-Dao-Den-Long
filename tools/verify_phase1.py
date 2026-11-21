@@ -1,4 +1,15 @@
-"""Small, reproducible Phase 1 acceptance checks; Python standard library only."""
+"""Small, reproducible Phase 1 acceptance checks; Python standard library only.
+
+Phase 3 note (contract v1.2): Phase 1 checks were updated where Ticket-03
+intentionally replaces old rules:
+- lantern lighting now costs 10 motes for a new lantern (was 5 partial deposits);
+- `deposited` is now the 0..100 fuel value, not a 0..5 mote counter;
+- dawn is a result tick: win only with >=60% lanterns lit, otherwise loss
+  reason `not_enough_lanterns` (was unconditional loss reason `dawn`);
+- time bonus was removed and winning adds `dawn_bonus` + flames * `per_flame_left`.
+The Phase 1 behaviours (pickup, pulse, hit, fall, loss, deterministic JSONL,
+invalid input handling) are still exercised.
+"""
 import json
 import subprocess
 import sys
@@ -29,19 +40,25 @@ def main():
     assert "tkinter" not in sys.modules
     passed.append("headless simulation does not import Tkinter")
     contract=json.loads((ROOT/"game.contract.json").read_text(encoding="utf-8"))
-    assert contract["contract_version"]=="1.1" and contract["tuning"]==T
-    passed.append("contract tuning matches simulation constants")
+    assert contract["contract_version"]=="1.2" and contract["tuning"]==T
+    passed.append("contract v1.2 tuning matches simulation constants")
     with tempfile.TemporaryDirectory() as tmp:
-        empty = {"random_motes": False, "random_shades": False, "motes": [[0,0,0] for _ in range(5)], "shades": [],
-                 "lanterns": [{"id":"L1", "pos":[9.5,0,0]}]}
+        # Phase 3: 10 motes are needed to light a new lantern. The first ten
+        # interactions pick up motes; the eleventh lights L1 and sets fuel=100.
+        empty = {"random_motes": False, "random_shades": False,
+                 "motes": [[0,0,0] for _ in range(10)], "shades": [],
+                 "lanterns": [{"id":"L1", "pos":[0,0,1.5]}]}
         frames=[]
-        for tick in (0,2,4,6,8,10):
+        for tick in range(0, 22, 2):
             frames.extend([{"tick":tick,"interact":True},{"tick":tick+1,"interact":False}])
-        frames.extend([{"tick":12,"move":[1,0]},{"tick":108,"move":[0,0]},{"tick":109,"interact":True},{"tick":110,"interact":False}])
-        p, rows = run(tmp,"pickup-deposit",empty,{"frames":frames},111)
+        p, rows = run(tmp,"pickup-deposit",empty,{"frames":frames},22)
         assert p.returncode == 0 and any(r.get("name")=="mote_picked" for r in rows) and any(r.get("name")=="lantern_lit" for r in rows), (p.stderr, [r for r in rows if r.get("type")=="event"])
-        assert rows[-1]["score"] == 150 and rows[-1]["state"] == "playing"
-        passed.append("pickup, deposit and lantern lighting")
+        lit_event = next(r for r in rows if r.get("name")=="lantern_lit")
+        assert lit_event["data"]["mode"] == "new" and lit_event["data"]["fuel"] == 100
+        assert rows[-1]["score"] == 200 and rows[-1]["state"] == "playing"
+        last_snap = next(r for r in reversed(rows) if r.get("type") == "snapshot")
+        assert last_snap["lanterns"][0]["fuel"] == 100
+        passed.append("pickup 10 motes and light a new lantern")
 
         sc={"player":{"pos":[0,0,0],"carried":2},"random_motes":False,"random_shades":False,"motes":[],"shades":[{"id":"Sx","pos":[4,0,0]}]}
         p,rows=run(tmp,"pulse",sc,{"frames":[{"tick":0,"pulse":True}]},1)
@@ -66,16 +83,21 @@ def main():
         assert p.returncode==0 and rows[-1]["state"]=="lost" and rows[-1]["score"]==0
         passed.append("loss at zero flames")
 
+        # Phase 3: dawn without enough lit lanterns is now a threshold loss.
         sc={"random_motes":False,"random_shades":False,"motes":[],"shades":[],"time_left_s":0.01}
         p,rows=run(tmp,"dawn",sc,None,1)
-        assert p.returncode==0 and rows[-1]["state"]=="lost" and any(r.get("name")=="game_over" and r["data"]["reason"]=="dawn" for r in rows)
-        passed.append("dawn timeout")
+        assert p.returncode==0 and rows[-1]["state"]=="lost" and any(r.get("name")=="game_over" and r["data"]["reason"]=="not_enough_lanterns" for r in rows)
+        passed.append("dawn below 60% lanterns is a loss")
 
-        sc={"player":{"flames":2},"random_motes":False,"random_shades":False,"motes":[],"shades":[],
-            "lanterns":[{"id":f"L{i}","lit":True} for i in range(1,6)]}
+        # Phase 3: 3/5 = 60% lit lanterns wins at dawn; score is dawn_bonus
+        # plus flames * per_flame_left (no time bonus).
+        sc={"player":{"flames":2},"random_motes":False,"random_shades":False,"motes":[],"shades":[],"time_left_s":0.01,
+            "lanterns":[{"id":f"L{i}","lit":True} for i in range(1,4)]}
         p,rows=run(tmp,"win",sc,None,1)
-        assert p.returncode==0 and rows[-1]["state"]=="won" and rows[-1]["score"]==399
-        passed.append("win and end bonus")
+        expected = T["score"]["dawn_bonus"] + 2 * T["score"]["per_flame_left"]
+        assert p.returncode==0 and rows[-1]["state"]=="won" and rows[-1]["score"]==expected
+        assert any(r.get("name")=="game_over" and r["data"]["reason"]=="dawn" for r in rows)
+        passed.append("dawn with 60% lanterns wins and scores dawn bonus")
 
         a,_=run(tmp,"seed-a",None,None,60,909); first=Path(tmp,"seed-a.jsonl").read_bytes()
         b,_=run(tmp,"seed-b",None,None,60,909); second=Path(tmp,"seed-b.jsonl").read_bytes()
