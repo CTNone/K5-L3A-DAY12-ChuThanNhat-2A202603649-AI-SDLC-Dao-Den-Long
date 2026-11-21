@@ -16,6 +16,8 @@
 - Godot Engine 4.7.2 (MIT).
 - Python 3.11 và thư viện chuẩn.
 - OpenCode / mô hình AI hỗ trợ viết mã, kiểm chứng và tài liệu.
+- Harness kỹ năng: [gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills)
+  commit `c6ca6c41c839b68319ffc08430b99ab768debc32`, giữ trong `.agents/skills/` và `skills-lock.json`.
 
 ## Giấy phép
 
