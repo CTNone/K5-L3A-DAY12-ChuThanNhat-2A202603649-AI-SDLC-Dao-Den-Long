@@ -1,5 +1,7 @@
 # OpenCode — Checklist Phase 2, 3 và 4
 
+> **Kế hoạch đã thực thi.** Trạng thái hiện tại xem `CHECKPOINTS.md`; kiến trúc là Godot 4.7.2 (GUI) + Python headless.
+
 ## Chỉ dẫn chung
 
 - Làm tuần tự **Phase 2 → Phase 3 → Phase 4**. Không gộp nhiều phase trong một lượt.

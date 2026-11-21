@@ -1,5 +1,7 @@
 # Checklist bàn giao dự án cho OpenCode
 
+> **Tài liệu lịch sử Phase 1.** Dự án đã chuyển sang Godot 4.7.2 cho GUI 3D; các đoạn "Python/Tkinter" bên dưới chỉ mô tả trạng thái lúc bàn giao Phase 1.
+
 ## Mục tiêu
 
 Cho OpenCode đọc và nắm dự án Đảo Đèn Lồng sau Phase 1. Chỉ kiểm tra, chưa triển khai Phase 2 cho đến khi chủ dự án gửi Ticket-02.
@@ -34,7 +36,7 @@ Hãy tiếp quản dự án Đảo Đèn Lồng trong thư mục hiện tại �
    Không xóa hoặc ghi đè file nào.
 
 3. Dùng router của Awesome Gamedev Agent Skills để phân loại dự án và báo rõ:
-   - Dự án này là Python/Tkinter, không phải Godot/Unity/pygame.
+   - Dự án này lúc bàn giao là Python/Tkinter, không phải Godot/Unity/pygame. (Hiện đã chuyển Godot 4.7.2; xem `README.md`.)
    - Hãy kiểm tra entry point và dependency trước khi gán engine.
    - Nếu router phân loại là custom/unsupported engine, hãy làm theo nhánh custom engine trong router; không giả vờ rằng có skill Python/Tkinter chuyên biệt và không nạp skill engine không liên quan.
    - Chỉ nạp tối đa 2–3 skill phù hợp với tác vụ kiểm tra hiện tại. Nêu tên skill và lý do trước khi dùng.

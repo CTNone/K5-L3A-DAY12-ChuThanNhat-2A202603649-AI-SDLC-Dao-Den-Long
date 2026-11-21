@@ -3,6 +3,8 @@
 - `bench.json` và `soak.json` trong repo là số đo thật của máy dev, không phải ngưỡng
   máy chấm. Seed mặc định của CLI là 1; ticket gợi ý 20261121 nhưng lần đo đã dùng 1
   và ghi rõ trong file.
+- Cấu hình máy đo được lưu ở `docs/proof/phase-4/machine.txt` (CPU/GPU/RAM/OS/Python);
+  `bench.json` cũng ghi các trường `cpu`, `gpu`, `ram_mb`, `resolution`, `python`.
 - Benchmark dùng mô phỏng headless vì môi trường dev dùng Intel HD 4600 và không có
   phép đo GPU ổn định. Không sửa số đo để đạt ngưỡng.
 - Bảng điểm GUI lưu ở `user://leaderboard.json` (thư mục dữ liệu Godot); CLI export

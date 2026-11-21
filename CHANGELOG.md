@@ -1,5 +1,16 @@
 # Changelog
 
+## Bản vá — v1.0.1
+
+### Fixed
+
+- Web zip tự chạy: kèm `serve_web.py` và `RUN.md`; giải nén là chạy được, không cần clone repo.
+- `Dockerfile` dùng zip trong `dist/` thay vì `build/web` bị ignore, nên `docker build` chạy từ clone sạch.
+- `tools/serve_web.py` tự chọn thư mục chứa nó khi không có `build/web`.
+- `bench.json` ghi thêm `cpu`, `gpu`, `ram_mb`, `resolution`, `python`; thêm `machine.txt`.
+- Harness `.agents/skills` được đưa vào repo và lịch sử git.
+- Thêm `clean-clone.log`; đồng bộ lại `CHECKPOINTS.md` và các tài liệu Phase 1 lịch sử.
+
 ## Phase 4 — v1.0.0
 
 ### Added

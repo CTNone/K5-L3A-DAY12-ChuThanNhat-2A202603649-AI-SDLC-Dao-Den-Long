@@ -113,8 +113,10 @@ Mỗi phase là một vòng nhỏ. Công cụ, thứ tự, định dạng tài l
 
 ---
 
-## Phase 4 / v1.0.0
+## Phase 4 / v1.0.0 và bản vá v1.0.1
 
+- **Artifact**: `v1.0.0` giữ nguyên bản đã nộp; `v1.0.1` là web zip tự chạy (kèm
+  `serve_web.py` và `RUN.md`), Dockerfile dùng zip này.
 - **Leaderboard**: lưu top 10 theo tên 3–12 ký tự, điểm rồi thời điểm; nhập tên sau khi
   thua hoặc thắng Đêm 3; admin không ghi điểm. CLI: `python3 game.py --export-leaderboard out.json`.
 - **Benchmark/soak**: `bench.json` là 60 giây mô phỏng headless (200 shade, 100 mote);
@@ -126,6 +128,8 @@ Mỗi phase là một vòng nhỏ. Công cụ, thứ tự, định dạng tài l
 - **Admin**: checkbox luôn hiện; `Ctrl+Shift+1..6` bật/tắt cheat dev. Không phải bảo mật.
 - Ghi chú: [spec](docs/notes/phase-4-spec.md), [giả định](docs/notes/phase-4-assumptions.md),
   [retro](docs/notes/phase-4-retro.md), [nhật ký AI](docs/notes/ai-usage-log.md).
+- Bằng chứng: [phase-4](docs/proof/phase-4/README.md), [cấu hình máy](docs/proof/phase-4/machine.txt),
+  [clone sạch](docs/proof/phase-4/clean-clone.log).
 
 ---
 
@@ -133,7 +137,7 @@ Mỗi phase là một vòng nhỏ. Công cụ, thứ tự, định dạng tài l
 
 Một **repo GitHub cá nhân, public**, gồm:
 
-1. **Toàn bộ mã nguồn** của game qua 4 phase, tag `phase-1` … `phase-4`, Release `v1.0.0`.
+1. **Toàn bộ mã nguồn** của game qua 4 phase, tag `phase-1` … `phase-4`, Release `v1.0.0` (bản vá `v1.0.1`).
 2. **Video demo `.mp4` dưới 5 phút** (đính kèm Release `v1.0.0` hoặc `docs/demo/demo.mp4`, link ở đầu README): chơi thử và cho thấy bằng chứng game chạy đúng.
 3. **Bằng chứng kiểm chứng** của từng phase (định dạng tự chọn).
 4. **Harness AI đã dùng** (AGENTS.md / CLAUDE.md, skills, hooks, plugins…), giữ nguyên trong repo và lịch sử git.

@@ -1,25 +1,27 @@
 # Checklist kế hoạch — Phase 1
 
+> **Tài liệu lịch sử Phase 1.** Kiến trúc hiện tại dùng Godot 4.7.2 cho GUI 3D và Python cho headless; xem `README.md`, `CHECKPOINTS.md` và `docs/notes/phase-4-spec.md`.
+
 Checklist này dựa trên PRD-0 và Test Contract v1.0. Các giá trị gameplay chưa được PRD quy định cần được chọn, ghi lại trong giả định và khai báo nhất quán trong `game.contract.json`.
 
 ## Trạng thái rà soát
 
 | Hạng mục | Tình trạng | Căn cứ / việc còn lại |
 |---|---|---|
-| Quyết định công nghệ và giả định gameplay | Đã ghi | Python 3.10+, Tkinter; chi tiết trong `docs/notes/phase-1-assumptions.md` |
+| Quyết định công nghệ và giả định gameplay | Đã ghi | Python 3.10+ (headless) + Godot 4.7.2 (GUI); chi tiết trong `docs/notes/phase-1-assumptions.md` |
 | Contract, tuning và headless 60 Hz | Đã kiểm chứng | `game.contract.json`; `tools/verify_phase1.py` |
 | Lõi gameplay, thắng/thua, điểm, HUD và chơi lại | Có triển khai; có bằng chứng GUI | Ảnh start/win/loss trong `docs/proof/phase-1/`; người chơi cần tự xác nhận cảm giác điều khiển và chơi hết ván |
 | Inputs, scenario, JSONL, mã lỗi, tính tất định | Đã kiểm chứng | Bằng chứng và kịch bản trong `docs/proof/phase-1/` |
 | README, ghi chú giả định, nhật ký AI và harness | Đã có | `README.md`, `docs/notes/phase-1-assumptions.md`, `AGENTS.md`, các script verify/capture |
 | Tag và phát hành lên remote | Hoàn tất | Commit và tag `phase-1` đã push lên `origin`; tag trỏ tới commit hoàn tất Phase 1 |
-| Chạy trên macOS/Linux | Chưa xác minh trực tiếp | README có lệnh tương thích; Tkinter cần có trên máy Linux/macOS |
+| Chạy trên macOS/Linux | Chưa xác minh trực tiếp | README có lệnh tương thích; GUI cần Godot 4.7.2, headless chỉ cần Python |
 
 **Kiểm tra gần nhất:** `py_compile`, `python tools/verify_phase1.py` và capture evidence đều chạy đạt trên Windows/Python 3.11.9. Ảnh GUI do người chơi cung cấp; lần rà soát này không tự chơi lại GUI. Cần người dùng xác nhận lần cuối trải nghiệm điều khiển; chưa thử trực tiếp trên macOS/Linux.
 
 ## Việc bạn cần tự xác nhận
 
 - [ ] Chơi lại một ván trên máy của bạn, xác nhận điều khiển, nhặt/nạp đom đóm, thắng/thua và chơi lại hoạt động đúng.
-- [ ] Nếu có thể, chạy README trên macOS/Linux (hoặc Docker/bản web nếu đã chọn cách đó); Tkinter phải có sẵn để mở GUI.
+- [ ] Nếu có thể, chạy README trên macOS/Linux (hoặc Docker/bản web nếu đã chọn cách đó); cần Godot 4.7.2 để mở GUI.
 - [ ] Nếu mọi thứ ổn, gửi nội dung Ticket-02 để bắt đầu Phase 2.
 
 ## 1. Chuẩn bị và quyết định

@@ -9,14 +9,14 @@
 
 | Checkpoint | Trạng thái | Ghi chú |
 |---|---|---|
-| CP0 | Một phần | Repo public, môi trường và nơi ghi chép đã có; còn xác nhận lab board/hạn nộp và clone sạch. |
-| CP1 | Xong | Tag `phase-1` đã có cả local và remote; evidence Phase 1 đầy đủ. |
-| CP2 | Code/evidence xong | Tag `phase-2` mới có ở local, **chưa push remote**. |
-| CP3 | Code/evidence xong | Tag `phase-3` mới có ở local, **chưa push remote**. |
-| CP4 | Đã xong phần chạy được | Contract `1.3`; `bench.json`, `soak.json`, leaderboard, web zip, tag `phase-4`/Release `v1.0.0`; xem `docs/proof/phase-4/`. |
-| CP5 | Đang hoàn tất | Video `docs/demo/demo.mp4`, spec/giả định/retro/AI log đã có; còn xác nhận link nộp LMS. |
+| CP0 | Một phần (mục cá nhân) | Repo public, môi trường và nơi ghi chép đã có; còn xác nhận lab board/trợ giảng và hạn nộp — việc cá nhân. |
+| CP1 | Xong | Tag `phase-1` có cả local và remote; evidence Phase 1 đầy đủ; clone sạch đã kiểm. |
+| CP2 | Xong | Tag `phase-2` đã có cả local và remote. |
+| CP3 | Xong | Tag `phase-3` đã có cả local và remote. |
+| CP4 | Xong phần repo | Contract `1.3`; `bench.json`, `soak.json`, leaderboard, web zip, tag `phase-4`/Release `v1.0.0`; thêm `v1.0.1` tự chạy; `clean-clone.log` + `machine.txt`. Hạn chế: chưa đo FPS 3D thật, chưa chạy GUI macOS/Linux. |
+| CP5 | Xong phần repo | Video `docs/demo/demo.mp4`, retro, AI log và harness `.agents/` đã có trong git; còn nộp link LMS — việc cá nhân. |
 
-Đã kiểm tra ngày 2026-11-21: `origin` là `https://github.com/CTNone/K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long.git`; GitHub API trả về `visibility=public`; `git ls-remote --tags origin` chỉ thấy `phase-1`.
+Đã kiểm tra lại ngày 2026-11-21: `origin` là `https://github.com/CTNone/K5-L3A-DAY12-ChuThanNhat-2A202603649-AI-SDLC-Dao-Den-Long.git`; GitHub API trả về `visibility=public`; `git ls-remote --tags origin` thấy `phase-1`…`phase-4` và `v1.0.0`; Release `v1.0.1` có web zip tự chạy kèm `serve_web.py`.
 
 ## Lịch 4 giờ
 
@@ -58,11 +58,11 @@ Mỗi checkpoint phase (CP1 đến CP4) có cùng một khung, nhưng nội dung
 Việc cần làm:
 - [x] Tạo **repo cá nhân, public** trên GitHub, đặt tên theo [SUBMISSION.md](SUBMISSION.md). *(Đã xác minh public qua GitHub API.)*
 - [x] Chọn công cụ AI, engine và ngôn ngữ. Cài và chạy thử một chương trình "hello" 3D hoặc headless để chắc môi trường ổn. *(Python 3.11 + Godot 4.7.2; headless và web build đã chạy.)*
-- [ ] Đăng nhập claude.ai, mở lab board, thử mở tab Phase 1 và hỏi trợ giảng một câu bất kỳ để chắc trợ giảng hoạt động. *(Chưa có bằng chứng trong repo.)*
+- [ ] Đăng nhập claude.ai, mở lab board, thử mở tab Phase 1 và hỏi trợ giảng một câu bất kỳ để chắc trợ giảng hoạt động. *(Việc cá nhân; cần bạn xác nhận.)*
 - [x] Tạo sẵn nơi ghi chép (một file hoặc một thư mục tùy bạn) cho giả định, nhật ký dùng AI và bằng chứng. *(Đã có `docs/notes/` và `docs/proof/`; nhật ký AI nằm trong `docs/proof/phase-1/README.md`, chưa có file riêng.)*
-- [ ] Kiểm tra hạn nộp từng phase theo thông báo của Coach. *(Thông tin cá nhân, không kiểm chứng từ repo.)*
+- [ ] Kiểm tra hạn nộp từng phase theo thông báo của Coach. *(Việc cá nhân; cần bạn xác nhận.)*
 
-Tự kiểm: clone repo sang thư mục khác và chạy được chương trình thử. *(Chưa có log clone sạch; sẽ thực hiện ở CP4.)*
+Tự kiểm: clone repo sang thư mục khác và chạy được chương trình thử. *(Đã làm: `docs/proof/phase-4/clean-clone.log`.)*
 
 ---
 
@@ -79,7 +79,7 @@ Gợi ý:
 - [x] Làm đúng các bàn giao liệt kê trong PRD-0. *(Contract, README, verify/capture tools và evidence Phase 1.)*
 
 Tự kiểm:
-- [ ] Clone sạch, làm theo README của bạn, chạy được game. *(Chưa có log clone sạch; sẽ thực hiện ở CP4.)*
+- [x] Clone sạch, làm theo README của bạn, chạy được game. *(`docs/proof/phase-4/clean-clone.log`.)*
 - [x] Mỗi yêu cầu chính có bằng chứng; chỗ chưa đạt đã ghi. *(Bảng evidence Phase 1 và ghi chú review.)*
 - [x] Đã gắn tag `phase-1` và push. *(Tag local `phase-1`; remote có `refs/tags/phase-1`.)*
 
@@ -97,7 +97,7 @@ Gợi ý:
 
 Tự kiểm:
 - [x] Phần mới có bằng chứng; phần cũ không bị hỏng (hoặc có lý do rõ ràng nếu đổi). *(`docs/proof/phase-2/verify-phase2.log`: 15 check; Phase 1 vẫn đạt.)*
-- [ ] Đã gắn tag `phase-2` và push. *(Tag local `phase-2` đã có; remote **chưa có** tag này.)*
+- [x] Đã gắn tag `phase-2` và push. *(Tag local và remote đều có.)*
 
 ---
 
@@ -114,7 +114,7 @@ Gợi ý:
 Tự kiểm:
 - [x] Người khác đọc ghi chú của bạn hiểu được vì sao đổi hướng. *(ADR, assumptions, test-changes.)*
 - [x] Không còn test bị tắt mà không có lý do. *(Đã ghi thay đổi test trong `phase-3-test-changes.md`.)*
-- [ ] Đã gắn tag `phase-3` và push. *(Tag local `phase-3` đã có; remote **chưa có** tag này.)*
+- [x] Đã gắn tag `phase-3` và push. *(Tag local và remote đều có.)*
 
 ---
 
@@ -123,14 +123,14 @@ Tự kiểm:
 **Mục tiêu:** đưa sản phẩm đến mức phát hành được, đo được, cài đặt dễ.
 
 Gợi ý:
-- [ ] Đọc các yêu cầu có **số đo cụ thể** trong ticket. Với mỗi yêu cầu đo, chạy thật và lưu kết quả cùng cấu hình máy.
-- [ ] Làm sạch README: người khác clone sạch, làm theo, chạy được trong tối đa 3 lệnh.
-- [ ] Đảm bảo file bản quyền, ghi nguồn asset, giấy phép.
-- [ ] Tạo bản phát hành chạy được (file thực thi, thư mục web tĩnh hoặc Docker) và GitHub Release `v1.0.0`.
+- [x] Đọc các yêu cầu có **số đo cụ thể** trong ticket. Với mỗi yêu cầu đo, chạy thật và lưu kết quả cùng cấu hình máy. *(`bench.json`, `soak.json`, `machine.txt`; FPS 3D thật chưa đo — ghi ở `phase-4-spec.md`.)*
+- [x] Làm sạch README: người khác clone sạch, làm theo, chạy được trong tối đa 3 lệnh. *(Lệnh nguồn + zip web tự chạy; xem `clean-clone.log`.)*
+- [x] Đảm bảo file bản quyền, ghi nguồn asset, giấy phép. *(`LICENSE`, `CREDITS.md`.)*
+- [x] Tạo bản phát hành chạy được (file thực thi, thư mục web tĩnh hoặc Docker) và GitHub Release `v1.0.0`. *(Web zip tự chạy; bản vá `v1.0.1`.)*
 
 Tự kiểm:
-- [ ] Thử trên một thư mục sạch hoặc máy khác, không dùng cấu hình sẵn của bạn.
-- [ ] Đã gắn tag `phase-4` và tạo Release `v1.0.0`.
+- [x] Thử trên một thư mục sạch hoặc máy khác, không dùng cấu hình sẵn của bạn. *(`docs/proof/phase-4/clean-clone.log`.)*
+- [x] Đã gắn tag `phase-4` và tạo Release `v1.0.0`. *(Thêm `v1.0.1` cho artifact tự chạy.)*
 
 ---
 
@@ -138,8 +138,8 @@ Tự kiểm:
 
 **Mục tiêu:** hoàn tất ghi chép, quay video, kiểm tra lần cuối, nộp.
 
-- [ ] **Retro ngắn:** điều gì hiệu quả hoặc không khi làm với AI; những lần AI sai và cách bạn phát hiện; harness nào giúp nhiều nhất; token/chi phí ước tính và cách bạn tiết kiệm; nếu làm lại thì đổi gì.
-- [ ] **Video demo `.mp4` dưới 5 phút**: chơi thử và cho thấy bằng chứng game chạy đúng. Đính kèm Release `v1.0.0` hoặc commit vào `docs/demo/demo.mp4` (dưới 100 MB). Đặt link ở đầu README.
-- [ ] Rà soát repo: không có `.env`, API key, token. Lịch sử git còn đủ file harness.
-- [ ] Rà soát bằng danh sách ở [SUBMISSION.md](SUBMISSION.md) mục "Checklist trước khi nộp".
-- [ ] Nộp link repo public theo hướng dẫn của Coach.
+- [x] **Retro ngắn:** điều gì hiệu quả hoặc không khi làm với AI; những lần AI sai và cách bạn phát hiện; harness nào giúp nhiều nhất; token/chi phí ước tính và cách bạn tiết kiệm; nếu làm lại thì đổi gì. *(`docs/notes/phase-4-retro.md`, `ai-usage-log.md`.)*
+- [x] **Video demo `.mp4` dưới 5 phút**: chơi thử và cho thấy bằng chứng game chạy đúng. Đính kèm Release `v1.0.0` hoặc commit vào `docs/demo/demo.mp4` (dưới 100 MB). Đặt link ở đầu README. *(1:57, link ở đầu README và asset Release.)*
+- [x] Rà soát repo: không có `.env`, API key, token. Lịch sử git còn đủ file harness. *(Đã quét; `.agents/skills` đã được commit.)*
+- [x] Rà soát bằng danh sách ở [SUBMISSION.md](SUBMISSION.md) mục "Checklist trước khi nộp".
+- [ ] Nộp link repo public theo hướng dẫn của Coach. *(Việc cá nhân; đã nộp trước đó, cần bạn xác nhận link LMS.)*
