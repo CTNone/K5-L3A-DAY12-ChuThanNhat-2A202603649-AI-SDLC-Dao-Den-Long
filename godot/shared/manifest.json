@@ -3,7 +3,7 @@
     "maps/night1.json": "5531bc7909a5c6d12e6bf63eb8f6f995e4522a2aeb2a214ae72285d079ec6e19",
     "maps/night2.json": "af2362b017058b039efb9eeb226035c8da0b968761b1646f50b7b12f71a0d5bb",
     "maps/night3.json": "fefdd6a684e3831feb44ef0e3e3ab483f2639358c57dc20c27b7a7e1d302ab7a",
-    "tuning.json": "d950c2cfdf565db7f98f40b072bd2dba9b86fb2bafb6e71997bba3ad37a6ecdc"
+    "tuning.json": "90c53b85a1df411fbdf16e61581d7bcbfbf1165524fe6a86256359512625e250"
   },
   "generated_by": "tools/sync_shared.py"
 }

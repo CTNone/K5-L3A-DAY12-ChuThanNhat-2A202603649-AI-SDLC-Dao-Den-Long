@@ -43,7 +43,7 @@
     "night3_lost_wisp_speed_m_s": 2.6,
     "night3_shade_speed": 3.1,
     "pickup_radius": 1.2,
-    "player_speed": 5.0,
+    "player_speed": 6.5,
     "pulse_cooldown_s": 3.0,
     "pulse_cost": 1,
     "pulse_push_m": 2.0,
@@ -61,7 +61,7 @@
       "per_relight": 50,
       "per_stun": 25
     },
-    "shade_chase_radius_m": 6.0,
+    "shade_chase_radius_m": 10.0,
     "shade_drain_per_s": 5,
     "shade_drain_radius_m": 2.0,
     "shade_hit_radius": 1.0,

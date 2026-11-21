@@ -14,5 +14,5 @@ Phase 2 core checks passed:
 - Night 3 wins at dawn without requiring the bell tower
 - Night 3 dawn threshold is ceil(60% of 7) = 5
 - Night 3 output is deterministic
-- 21,600 Night 3 ticks finish in 0.55s
+- 21,600 Night 3 ticks finish in 0.56s
 - godot/shared is in sync with contract and maps

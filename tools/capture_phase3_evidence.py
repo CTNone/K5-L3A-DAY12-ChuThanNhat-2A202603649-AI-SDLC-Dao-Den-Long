@@ -69,7 +69,7 @@ def main():
                                "lanterns": [{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 1}],
                                "shades": []},
                       None, 61),
-        "drain": (empty | {"player": {"pos": [10, 0, 0]}, "time_left_s": 300,
+        "drain": (empty | {"player": {"pos": [30, 0, 0]}, "time_left_s": 300,
                            "lanterns": [{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 20}],
                            "shades": [{"id": "S1", "pos": [2, 0, 0]}]},
                   None, 30),

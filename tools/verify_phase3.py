@@ -114,7 +114,7 @@ def main():
 
         # Ambient drain is 1/s: a fuel-1 lantern goes out exactly on tick 60,
         # emitting lantern_out once and keeping ever_lit.
-        sc = empty() | {"player": {"pos": [10, 0, 0]}, "time_left_s": 300,
+        sc = empty() | {"player": {"pos": [30, 0, 0]}, "time_left_s": 300,
                         "lanterns": [{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 1}]}
         proc, rows = run(tmp, "deplete-ambient", 1, sc, None, 61)
         out = events(rows, "lantern_out")
@@ -126,7 +126,7 @@ def main():
 
         # A shade within 2 m adds 5/s, so ambient + shade (6/s) drains fuel 1
         # in 10 ticks. The shade is in the drain state and stops when out.
-        sc = empty() | {"player": {"pos": [10, 0, 0]}, "time_left_s": 300,
+        sc = empty() | {"player": {"pos": [30, 0, 0]}, "time_left_s": 300,
                         "lanterns": [{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 1}],
                         "shades": [{"id": "S1", "pos": [2, 0, 0]}]}
         proc, rows = run(tmp, "deplete-shade", 1, sc, None, 12)
@@ -138,13 +138,21 @@ def main():
 
         # Drain rate check: below the safe threshold a shade within 2 m adds
         # 5/s. 10 ticks of 6/s = 60 drain units, i.e. one fuel.
-        sc = empty() | {"player": {"pos": [10, 0, 0]}, "time_left_s": 300,
+        sc = empty() | {"player": {"pos": [30, 0, 0]}, "time_left_s": 300,
                         "lanterns": [{"id": "L1", "pos": [0, 0, 0], "lit": True, "fuel": 20}],
                         "shades": [{"id": "S1", "pos": [2, 0, 0]}]}
         proc, rows = run(tmp, "drain-rate", 1, sc, None, 10)
         assert proc.returncode == 0 and lantern(rows, 10, "L1")["fuel"] == 19
         assert snap(rows, 10)["shades"][0]["state"] == "drain"
         passed.append("shade drain removes one fuel per 10 ticks below fuel 30")
+
+        # The chase radius was raised to 10 m after playtest feedback, so a
+        # shade 8 m from the player should already be chasing.
+        sc = empty() | {"player": {"pos": [8, 0, 0]}, "time_left_s": 300,
+                        "shades": [{"id": "S1", "pos": [0, 0, 0]}]}
+        proc, rows = run(tmp, "chase-radius", 1, sc, None, 1)
+        assert proc.returncode == 0 and snap(rows, 1)["shades"][0]["state"] == "chase"
+        passed.append("shade chases the player from 10 m")
 
         # Relighting an ever-lit lantern costs 5 motes, sets fuel 100, counts
         # relit_count, increments successful_lights and grants 50 points.
@@ -242,7 +250,7 @@ def main():
         assert proc3.returncode == 2 and "error:" in proc3.stderr
         passed.append("colorblind mode is persisted/echoed and validated")
 
-        sc = empty() | {"player": {"pos": [10, 0, 0]}, "time_left_s": 300,
+        sc = empty() | {"player": {"pos": [30, 0, 0]}, "time_left_s": 300,
                         "lanterns": [{"id": "L1", "lit": True}, {"id": "L2", "lit": True, "fuel": 50}],
                         "shades": [{"id": "S1", "pos": [2, 0, 0]}]}
         a_proc, _ = run(tmp, "det-a", 1, sc, None, 120, seed=909, snapshot_every=10)

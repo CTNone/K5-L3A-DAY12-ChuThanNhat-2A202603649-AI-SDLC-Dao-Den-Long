@@ -52,7 +52,7 @@ giá trị không được checklist quy định được ghi thành giả đị
 ### AC-3.4 AI shade và vùng an toàn
 
 - Shade có state `stunned`, `chase`, `drain`, `wander`.
-- Ưu tiên chase khi người chơi trong `shade_chase_radius_m` (6 m); nếu không, drain khi
+- Ưu tiên chase khi người chơi trong `shade_chase_radius_m` (10 m); nếu không, drain khi
   trong `shade_drain_radius_m` (2 m) của đèn sáng; nếu không, wander tới đèn sáng yếu nhất
   theo quy tắc gần nhất.
 - Vùng an toàn quanh đèn chỉ tồn tại khi `fuel >= safe_fuel_threshold` (30). Đúng 30 vẫn

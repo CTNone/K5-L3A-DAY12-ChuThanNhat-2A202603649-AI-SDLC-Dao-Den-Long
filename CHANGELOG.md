@@ -24,3 +24,8 @@
 - Luật thắng bình minh, thua `not_enough_lanterns`, ưu tiên `no_flames`.
 - Setting `color_mode` (`default|colorblind`) và HUD thanh dầu/capacity/cảnh báo.
 - Test Phase 3 và bằng chứng `docs/proof/phase-3/`.
+
+### Balance sau playtest
+
+- `player_speed` tăng `5.0` → `6.5` m/s.
+- `shade_chase_radius_m` tăng `6.0` → `10.0` m.

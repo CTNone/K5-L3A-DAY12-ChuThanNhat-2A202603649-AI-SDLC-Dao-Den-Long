@@ -18,8 +18,8 @@ python game.py
 - `verify-phase1.log`: 11/11 Phase 1 checks pass on contract v1.2.
 - `verify-phase2.log`: 17 Phase 2 checks pass, including the dawn threshold and 21,600
   Night 3 ticks (well under 1 s).
-- `verify-phase3.log`: 22 Phase 3 checks pass, including refuel, depletion, drain, relight,
-  capacity, pushback, dawn win/loss, scoring, color mode and determinism.
+- `verify-phase3.log`: 23 Phase 3 checks pass, including refuel, depletion, drain, relight,
+  capacity, pushback, chase radius, dawn win/loss, scoring, color mode and determinism.
 - `drain-determinism-1.jsonl` and `drain-determinism-2.jsonl`: identical SHA-256.
 - `build-web.log`: Godot Web export succeeds (`index.html`, `index.js`, `index.pck`,
   `index.wasm`).
@@ -28,6 +28,7 @@ python game.py
   the Phase 3 HUD.
 - Scenario runs: `refuel`, `depletion`, `drain`, `relight`, `pushback`, `dawn-threshold`,
   `colorblind`; each has its scenario JSON, JSONL output and log.
+- Balance after playtest: `player_speed=6.5` and `shade_chase_radius_m=10.0`.
 
 ## Environment
 

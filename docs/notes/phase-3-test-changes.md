@@ -23,7 +23,7 @@ Các test Phase 1/2 bị sửa vì hành vi v1.2 thay đổi có chủ đích. K
 
 ## Phase 3 (`tools/verify_phase3.py`)
 
-22 kiểm tra mới:
+23 kiểm tra mới:
 
 1. Contract v1.2 và `ui` đồng bộ với `godot/shared/`.
 2. Snapshot có đầy đủ trường fuel/capacity/dawn/color mode.
@@ -47,6 +47,7 @@ Các test Phase 1/2 bị sửa vì hành vi v1.2 thay đổi có chủ đích. K
 20. Determinism với cùng seed/scenario.
 21. Hiệu năng 21.600 tick trong ngân sách thời gian.
 22. `godot/shared` đồng bộ với contract và map.
+23. Shade chase người chơi từ khoảng cách 10 m.
 
 ## Ghi chú
 

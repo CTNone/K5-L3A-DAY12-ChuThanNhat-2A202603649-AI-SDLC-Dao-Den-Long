@@ -8,6 +8,7 @@ Phase 3 core checks passed:
 - ambient drain depletes exactly at 60 ticks and emits lantern_out
 - shade drain is 5/s and stops after the lantern goes out
 - shade drain removes one fuel per 10 ticks below fuel 30
+- shade chases the player from 10 m
 - relight costs 5 motes, scores 50 and increments relit_count
 - new light costs 10 motes, scores 100 and raises capacity to 12
 - capacity is min(20, 10 + 2*lights) and resets each night

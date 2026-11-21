@@ -1,6 +1,6 @@
 {
   "phase": 3,
-  "generated_at": "2026-11-21T03:07:52.278662+00:00",
+  "generated_at": "2026-11-21T03:36:55.546795+00:00",
   "contract_version": "1.2",
   "seed": 7,
   "checks": {
@@ -225,8 +225,8 @@
     },
     "determinism-drain": {
       "hashes": [
-        "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f",
-        "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+        "e68f87438baea89c1e6ac93913790f4c0ea6238cddefd4bd6958adcb25e09225",
+        "e68f87438baea89c1e6ac93913790f4c0ea6238cddefd4bd6958adcb25e09225"
       ],
       "equal": true
     },
@@ -295,7 +295,7 @@
     {
       "path": "docs/proof/phase-3/drain-determinism-1.jsonl",
       "bytes": 12283,
-      "sha256": "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+      "sha256": "e68f87438baea89c1e6ac93913790f4c0ea6238cddefd4bd6958adcb25e09225"
     },
     {
       "path": "docs/proof/phase-3/drain-determinism-1.log",
@@ -305,7 +305,7 @@
     {
       "path": "docs/proof/phase-3/drain-determinism-2.jsonl",
       "bytes": 12283,
-      "sha256": "91460566aaf2a5c88e749c4ec8e8e83f1cb03cf955758b10937189304304dd3f"
+      "sha256": "e68f87438baea89c1e6ac93913790f4c0ea6238cddefd4bd6958adcb25e09225"
     },
     {
       "path": "docs/proof/phase-3/drain-determinism-2.log",
@@ -315,12 +315,12 @@
     {
       "path": "docs/proof/phase-3/drain-scenario.json",
       "bytes": 524,
-      "sha256": "92699230be749ee80fc1e56e0a42bc6512f7c9d56d0f9309bc88043a87149684"
+      "sha256": "c957b79af5c09f5a10ffcb4d2ab0cf43c4b7eac9cfb9bfe1fa6d0a7709600031"
     },
     {
       "path": "docs/proof/phase-3/drain.jsonl",
       "bytes": 29174,
-      "sha256": "258408c66036b4245d53e6c23825d035dd70f0f1eabbde3cc0f9e39b1b7102c4"
+      "sha256": "116fcaac9d58585505d985c493d1b56f0d83aaf79b411b7792727223b14f411d"
     },
     {
       "path": "docs/proof/phase-3/drain.log",
@@ -334,18 +334,18 @@
     },
     {
       "path": "docs/proof/phase-3/menu-1280x720.png",
-      "bytes": 163735,
-      "sha256": "412548841ac103b9482e9c2e8a670cdc3c39269b9d12b7f38cd6eb45e8bcf9b6"
+      "bytes": 164175,
+      "sha256": "9578e438595ace75130a16d8b6b4446acab4a272e85729262d12609627e4b336"
     },
     {
       "path": "docs/proof/phase-3/night1-1280x720.png",
-      "bytes": 174643,
-      "sha256": "cf783783b32a2200afb264246c7165e132ab663604be642bf3ee34909bb99ac5"
+      "bytes": 174604,
+      "sha256": "240670b5e5eb15dadc9483a0195c2fb1440608701d876e4759d865350e4736af"
     },
     {
       "path": "docs/proof/phase-3/night3-1280x720.png",
-      "bytes": 214977,
-      "sha256": "d349a2ce1a689ba3e9aa8a72c3795990000f6dd6e2a1628bbc1027ddeca28099"
+      "bytes": 214244,
+      "sha256": "53f2a54466cf7d714fc415b564f99ba28345933416a4b9081b7f9adf01549241"
     },
     {
       "path": "docs/proof/phase-3/pushback-inputs.json",
@@ -369,8 +369,8 @@
     },
     {
       "path": "docs/proof/phase-3/README.md",
-      "bytes": 1623,
-      "sha256": "9995fe3b2ffd3512f6422a68279a34c5c8b9c66e15228f19e6ce7c106b339324"
+      "bytes": 1715,
+      "sha256": "490714e05945b4ac914ee394fd3edd16485640c375b611012ed6cb89f6a95662"
     },
     {
       "path": "docs/proof/phase-3/refuel-inputs.json",
@@ -425,12 +425,12 @@
     {
       "path": "docs/proof/phase-3/verify-phase2.log",
       "bytes": 744,
-      "sha256": "85dd7e56531abb581628e81924f46eb506238684e55decec77f048086cd88470"
+      "sha256": "f9a9896d8f1fac0265b0facfd438e30a28f78e197c70dcd7986be42b9681b6ea"
     },
     {
       "path": "docs/proof/phase-3/verify-phase3.log",
-      "bytes": 1198,
-      "sha256": "92be951700fb0650f38fb0dbb9bd9255df1c8619c7a063a21352e95eaba1fd6b"
+      "bytes": 1235,
+      "sha256": "970e33ace382e00c2866739ced7afbc8df94a77070afd82e90898f23312f34bc"
     },
     {
       "path": "docs/proof/phase-3/web-check.log",
@@ -438,5 +438,5 @@
       "sha256": "7bae228db7a508bee14657cab90c703514c902815d1dcf8e7a58d5ac1a15e5e5"
     }
   ],
-  "git_head": "deb545508dfb83252fd4ea18836a11e7854763f3"
+  "git_head": "e04491948d818cbe52bc814a5aec321bf8f0d47d"
 }

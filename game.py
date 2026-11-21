@@ -13,12 +13,12 @@ from pathlib import Path
 HZ = 60
 ROOT = Path(__file__).resolve().parent
 T = {
-    "player_speed": 5.0, "carry_capacity": 10,
+    "player_speed": 6.5, "carry_capacity": 10,
     "capacity_per_light": 2, "capacity_max": 20,
     "new_light_cost": 10, "relight_cost": 5,
     "lantern_fuel_max": 100, "refuel_fuel_per_mote": 10,
     "ambient_drain_per_s": 1, "shade_drain_per_s": 5,
-    "shade_drain_radius_m": 2.0, "shade_chase_radius_m": 6.0,
+    "shade_drain_radius_m": 2.0, "shade_chase_radius_m": 10.0,
     "safe_fuel_threshold": 30,
     "dawn_lantern_ratio": 0.6,
     "fuel_push_radius_m": 7.0, "fuel_push_m": 2.0,

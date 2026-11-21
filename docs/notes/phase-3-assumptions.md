@@ -31,7 +31,7 @@ Giữ các giá trị Phase 1/2 trừ các mục dưới đây:
 | `ambient_drain_per_s` | 1 | Hao dầu nền mỗi giây |
 | `shade_drain_per_s` | 5 | Hao thêm mỗi shade trong bán kính |
 | `shade_drain_radius_m` | 2.0 | Bán kính shade drain |
-| `shade_chase_radius_m` | 6.0 | Bán kính chase |
+| `shade_chase_radius_m` | 10.0 | Bán kính chase sau cân bằng playtest |
 | `safe_fuel_threshold` | 30 | Dưới ngưỡng này mất vùng an toàn |
 | `dawn_lantern_ratio` | 0.6 | Tỷ lệ đèn sáng cần để thắng |
 | `fuel_push_radius_m` | 7.0 | Bán kính đẩy shade khi nạp vượt ngưỡng |
@@ -120,3 +120,10 @@ Các giá trị `per_relight`, `per_flame_left`, `dawn_bonus`, `fuel_push_radius
   gây stun.
 - Capacity tăng cho cả thắp mới và thắp lại.
 - `deposited` tiếp tục là alias của `fuel`.
+
+## 11. Cân bằng sau playtest
+
+- `player_speed` tăng `5.0` → `6.5` m/s để người chơi kịp tới đèn trước khi dầu cạn.
+- `shade_chase_radius_m` tăng `6.0` → `10.0` m để shade phản ứng sớm hơn thay vì chỉ đuổi
+  khi người chơi áp sát; shade vẫn ưu tiên `wander` trong vùng an toàn.
+- Giữ nguyên drain `1/s` + `5/s` và ngưỡng an toàn `30` để không phá các test Phase 3.

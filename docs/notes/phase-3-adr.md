@@ -54,7 +54,7 @@ Hao dầu:
 - Vùng an toàn: đèn sáng có `fuel >= 30` tạo bán kính an toàn `3 m`. Đúng `30`
   vẫn an toàn; `< 30` mất vùng an toàn.
 - Vùng an toàn (đèn sáng `fuel >= 30`) luôn đẩy shade sang `wander`; nếu không trong vùng an
-  toàn: người chơi trong `<= 6 m` → `chase`; nếu không, trong `<= 2 m` của
+  toàn: người chơi trong `<= 10 m` → `chase`; nếu không, trong `<= 2 m` của
   đèn sáng → `drain`; nếu không → `wander`.
 - `wander`: đi tới đèn sáng có `fuel` thấp nhất; hòa chọn đèn gần Bóng Mực hơn;
   hòa nữa chọn `id` nhỏ hơn. Không còn đèn sáng thì đứng yên.
@@ -116,3 +116,10 @@ Hao dầu:
   mâu thuẫn. Bỏ khỏi điều kiện thắng, giữ địa hình.
 - **Dùng số thực cho fuel:** dễ trôi giữa các lần chạy. Chọn tích lũy nguyên
   1/60.
+
+## 4. Cân bằng sau playtest
+
+- Người chơi báo tốc độ di chuyển hơi thấp và shade chỉ đuổi khi áp sát.
+- Tăng `player_speed` từ `5.0` lên `6.5` m/s.
+- Tăng `shade_chase_radius_m` từ `6.0` lên `10.0` m để shade phản ứng sớm hơn.
+- Giữ nguyên drain, ngưỡng an toàn và scoring để không phá các test Phase 3.
