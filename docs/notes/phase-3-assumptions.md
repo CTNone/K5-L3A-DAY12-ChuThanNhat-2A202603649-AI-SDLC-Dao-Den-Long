@@ -4,6 +4,10 @@ Checklist Phase 3 không kèm bản Ticket-03 đầy đủ trong repo. Các mụ
 triển khai, được ghi lại để chủ dự án duyệt/sửa. Không coi là số liệu chính thức của khách
 hàng cho đến khi có xác nhận.
 
+> **Đã xác nhận trong phiên 2026-11-21:** giữ scoring hiện tại, safe zone ưu tiên hơn
+> chase, pushback đẩy thêm 2 m và không stun, capacity tăng cho cả thắp lại, `deposited`
+> tiếp tục là alias của `fuel`.
+
 ## 1. Contract và tick
 
 - `contract_version` = `"1.2"`.
@@ -109,11 +113,10 @@ Các giá trị `per_relight`, `per_flame_left`, `dawn_bonus`, `fuel_push_radius
   luôn hiện để không phụ thuộc màu.
 - Cảnh báo dầu thấp có biểu tượng `⚠` và nhấp nháy 1 Hz.
 
-## 10. Điểm mở cần xác nhận
+## 10. Điểm đã chốt
 
-- Bảng điểm chính thức của Ticket-03 (đặc biệt `per_relight`, `per_flame_left`,
-  `dawn_bonus`).
-- Bán kính/khoảng cách đẩy shade (`fuel_push_radius_m`, `fuel_push_m`) và việc đẩy có gây
-  stun hay không.
-- Việc capacity tăng cho cả thắp lại hay chỉ thắp mới (hiện tăng cả hai).
-- Việc `deposited` tiếp tục là alias của `fuel` hay tách thành trường riêng.
+- Giữ bảng điểm hiện tại: `per_relight=50`, `per_flame_left=50`, `dawn_bonus=500`.
+- Pushback dùng `fuel_push_radius_m=7`, `fuel_push_m=2`, đẩy shade ra xa thêm 2 m và không
+  gây stun.
+- Capacity tăng cho cả thắp mới và thắp lại.
+- `deposited` tiếp tục là alias của `fuel`.
