@@ -3,8 +3,8 @@
 ## Demo v1.0.1
 
 - Video: [docs/demo/demo.mp4](docs/demo/demo.mp4)
-- Web build tự chạy: tải `dao-den-long-web-v1.0.1.zip` trong Release `v1.0.1`, giải nén,
-  chạy `python serve_web.py` rồi mở URL in ra. Bản `v1.0.0` vẫn giữ trong Release để đối chiếu.
+- Web build tự chạy: `dist/dao-den-long-web-v1.0.1.zip` (trong repo; asset Release `v1.0.1` nếu đã upload),
+  giải nén, chạy `python serve_web.py` rồi mở URL in ra. Bản `v1.0.0` vẫn giữ trong Release để đối chiếu.
 - Chạy từ mã nguồn: `python game.py --no-browser` nếu đã có `build/web` (hoặc `python game.py --build`).
 - Docker: `docker build -t dao-den-long .` rồi `docker run --rm -p 8000:8000 dao-den-long`.
 - Contract: `1.3`; headless, benchmark và soak đều chạy bằng Python chuẩn.
